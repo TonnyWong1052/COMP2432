@@ -1,0 +1,12 @@
+2024-4-2:
+
+Date validation (error date format --> year >= 1900 and year <= 9999,
+Month = 2 and day = 31, 
+2024/4/2
+),
+
+(
+Correct date format --> 2024-4-2
+)
+
+
