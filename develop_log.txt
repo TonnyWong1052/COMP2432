@@ -1,12 +1,27 @@
 2024-4-2:
 
-Date validation (error date format --> year >= 1900 and year <= 9999,
-Month = 2 and day = 31, 
-2024/4/2
-),
+addPEIOD Funtion:
 
+Command validation
+incorrect: addPEIOD 2024-06-01 2024-06-30a
+Correct: addPEIOD 2024-06-01 2024-06-30
+
+Date validation (
+    incorrect date format:
+    year >= 1900 and year <= 9999,
+    Month = 2 and day = 31,
+    2024/4/2
+),
 (
-Correct date format --> 2024-4-2
+    Correct date format --> 2024-4-2
 )
 
+2024-4-3
 
+addORDER, addBATCH, runPLS, exitPLS function are completed
+all order will save on 'order_list' [data type: LinkedList]
+innovative function : printDATA --> print all data
+
+Todo list:
+redo and undo command (innovative function)
+Algorithm : (FCFS, PR, SJF, ???)
