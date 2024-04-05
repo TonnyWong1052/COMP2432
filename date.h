@@ -4,6 +4,9 @@
 #include <time.h>
 #include <stdio.h>
 
+#ifndef DATE_H
+#define DATE_H
+
 int isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -98,3 +101,5 @@ bool date_is_valid(const char *buffer) {
         return false;
     }
 }
+
+#endif

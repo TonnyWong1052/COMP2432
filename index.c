@@ -1,7 +1,7 @@
 #include "object/plant.h"
 #include "object/order.h"
 #include "algorithm/FCFS.c"
-#include "date.c"
+#include "date.h"
 #include "data_structure/LinkedList.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -63,7 +63,7 @@ void addORDER(char input_command[50], Node **order_list) {
 //    if (order_list == NULL)
 //        createNode(order);
 //    else
-    appendNode(order_list, order);
+    addToTail(order_list, order);
 }
 
 void removeNewline(char *str) {
@@ -134,11 +134,11 @@ void runPLS(char input_command[50], Node **order_list, char start_date[11], char
         return;
     }
 
-    int period_day = calculateDaysBetweenDate(start_date, end_date) + 1;
+
 //    printf("current period day: %d\n", period_day);
     // create channel for parent to child and child to parent
 
-    FCFSalgo(order_list, plants, period_day);
+    FCFSalgo(order_list, plants, start_date, end_date);
 
 //    if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
 //        FCFSalgo(order_list, &plants, period_day);

@@ -60,7 +60,7 @@ void printOrderList(Node* head) {
         int quantity = ((struct Order*)temp_data)->quantity;
         char* productName = ((struct Order*)temp_data)->productName;
 
-        printf("Order Number: %s, Due Date: %s, Quantity: %d, Product Name: %s",
+        printf("Order Number: %s, Due Date: %s, Quantity: %d, Product Name: %s\n",
                orderNumber, dueDate, quantity, productName);
         temp = temp->next;
     }
@@ -147,22 +147,26 @@ void* get_tail(Node* head) {
 }
 
 void* getElementFromIndex(Node* head, int index) {
-    int currentIndex = 0;
-    Node* current = head;
-
-    // Traverse the list until the desired index is reached or the end of the list is reached
-    while (current != NULL && currentIndex < index) {
-        current = current->next;
-        currentIndex++;
-    }
-
-    // Check if the desired index was reached
-    if (current != NULL && currentIndex == index) {
-        return current->data;  // Return the data at the current node
-    } else {
-        // Index was out of bounds
+    // Check if the index is negative or the list is empty
+    if (index < 0 || head == NULL) {
         return NULL;
     }
+
+    Node* current = head;
+    int count = 0;
+
+    // Traverse the list until the end or the desired index is reached
+    while (current != NULL) {
+        if (count == index) {
+            return current->data; // Return the data of the current node
+        }
+        count++;
+        current = current->next;
+    }
+
+    // If the loop completes without returning, the index was out of bounds
+    return NULL;
 }
+
 
 #endif // LINKED_LIST_H

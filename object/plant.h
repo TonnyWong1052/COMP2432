@@ -32,8 +32,14 @@ void setPlantAttributes(struct Plant* plant, const char* name, int productiveFor
 //    plant->myOrder = createNode(NULL);
 }
 
-void addOrder(struct Plant* plant, struct Order *order){
-    addToTail(&plant->myOrder, order);
+void addOrder(struct Plant plant, struct Order *order){
+//    addToHead(&plant->myOrder, order);
+    addToTail(&plant.myOrder, order);
+//    printFirstOrderItem(plant);
+
+//    struct Order* order_temp = (struct Order*)get_tail(plant->myOrder);
+//    struct Order* order_temp = (struct Order*)getElementFromIndex(plant->myOrder, 1);
+//    printf("\nThe first order in plant %s is %s. name: %s \n", plant->name, order->orderNumber, order->productName);
 }
 
 void printAllOrderName(struct Node *order_list){
