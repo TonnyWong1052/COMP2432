@@ -59,19 +59,11 @@ void addORDER(char input_command[50], Node **order_list) {
 
     struct Order *order = malloc(sizeof(struct Order));
     setOrderValues(order, orderNumber, dueDate, quantity_int, productName);
-
 //    if (order_list == NULL)
 //        createNode(order);
 //    else
     addToTail(order_list, order);
 }
-
-void removeNewline(char *str) {
-    char *newlinePos;
-    while ((newlinePos = strchr(str, '\n')) != NULL)
-        *newlinePos = '\0';
-}
-
 
 void addBATCH(char input_command[50], Node **order_list) {
     strtok(input_command, " ");
@@ -99,9 +91,6 @@ void addBATCH(char input_command[50], Node **order_list) {
 
 void runPLS(char input_command[50], Node **order_list, char start_date[11], char end_date[11], struct Plant plants[3]) {
     // runPLS FCFS | printREPORT > report_01_FCFS.txt
-
-    char *currentAlgorithm[] = {"FCFS", "PR", "SJF"};
-
     strtok(input_command, " ");
     char *algorithm = NULL, *pipeOperator = NULL, *printREPORT = NULL, *greaterSign = NULL, *outputReport = NULL, *additionalFormat;
     algorithm = strtok(NULL, " ");
@@ -116,6 +105,7 @@ void runPLS(char input_command[50], Node **order_list, char start_date[11], char
     // error handle test case: 'runPLS FCFS | printREPORT > ', 'runPLS FCFS Z printREPORT > report_01_FCFS.txt',
     // , 'runPLS FCFS | printREPORT ? report_01_FCFS.txt', 'runPLS FCFS Z printEXcel > report_01_FCFS.txt'
     //  printf("\ntest: %s %s %s %s outputReport:|%s|\n", algorithm, pipeOperator, printREPORT, greaterSign, outputReport);
+
     if (algorithm == NULL || pipeOperator == NULL || printREPORT == NULL || greaterSign == NULL ||
         outputReport == NULL || strcmp(outputReport, "\n") == 0) {
         printf("Error 400 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
@@ -132,34 +122,28 @@ void runPLS(char input_command[50], Node **order_list, char start_date[11], char
     } else if (additionalFormat != 0) {  // command format
         printf("Error 404 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
         return;
+    } else if (strcmp(start_date, "") == 0 || strcmp(end_date, "") == 0) {   // check period date is exist
+        printf("Error 405: Please set period date : Recommend command 'addPERIOD [start date] [end date]'\n");
+        return;
+    } else if (get_size(*order_list) == 0) {    // check enough order
+        printf("Error 406: order list is null, please add order to the list : Recommend command 'addORDER [Order Number] [Due Date] [Quantity] [Product Name]'\n");
+        return;
     }
 
 
 //    printf("current period day: %d\n", period_day);
     // create channel for parent to child and child to parent
+//        struct Order *order = (struct Order *) get_tail(order_list);
+//    printOrderList(&order_list);
+    if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
+        FCFSalgo(order_list, plants, start_date, end_date, outputReport);
+    else if (strcmp(algorithm, "PR") == 0)
+        printf("PR algo TBC");
+    else if (strcmp(algorithm, "SJF") == 0)
+        printf("SJF algo TBC");
+    else
+        printf("Error 407: Input '%s' algorithm not existing", algorithm);
 
-    FCFSalgo(order_list, plants, start_date, end_date);
-
-//    if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
-//        FCFSalgo(order_list, &plants, period_day);
-//    else if (strcmp(algorithm, "PR") == 0)
-//        printf("PR algo TBC");
-//    else if (strcmp(algorithm, "SJF") == 0)
-//        printf("SJF algo TBC");
-//    else
-//        printf("input algorithm not exist");
-//    print report
-
-//    printf("\nPlant_X (%d per day)\n", plants[0].productiveForces);
-//    printf("%s to %s\n\n", start_date, end_date);
-//    printf("%-15s| %-15s| %-15s| %-15s| %-15s|\n", "Date", "Product Name", "Order Number", "Quantity", "Due Date");
-//    int x;
-//    char* date_table = start_date;
-//    for(x=0;x<period_day;x++)
-//    {
-//        printf("%-15s| %-15s| %-15s| %-15d| %-15s|\n", date_table, "Product_A", "P1001", 300, "1999-11-11");
-//        addOneDay(date_table);
-//    }
 //    printFirstOrderItem(&plants[1]);
 }
 
@@ -183,13 +167,13 @@ int main() {
     Node *order_list = NULL;
 
     printf("\n   ~~WELCOME TO PLS~~\n\n");
-    while (1) {
+    while (true) {
         char input_command[50] = "";
         printf("Please enter:\n> ");
         fgets(input_command, sizeof(input_command), stdin);
 
         if (strncmp(input_command, "test", 4) == 0) {   // for testing only !!!
-            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-30");
+            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-20");
             addPERIOD(input_command, &start_date, &end_date);
             strcpy(input_command, "addBATCH orderBATCH01.dat");
             addBATCH(input_command, &order_list);

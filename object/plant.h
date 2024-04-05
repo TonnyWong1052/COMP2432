@@ -10,36 +10,16 @@
 struct Plant {
     char name[50];
     int productiveForces;
-    Node *myOrder;
-};
+    Node *myOrder;      // record all order, the plant obtained
+    Node *orderDate;    //record the schedule of the order
 
-void printFirstOrderItem(struct Plant* plant){
-//    char* orderNumber = ((struct Order*)get_first(plant->myOrder))->orderNumber;
-    struct Order* firstOrder = (struct Order*)get_first(plant->myOrder);
-    int order_size = get_size(plant->myOrder);
-    printf("\nThe first order in plant %s is %s.\n", plant->name, firstOrder->orderNumber);
-    printf("The size is %d \n", order_size);
-//    struct Order *order;
-//    char* productName = ((struct Order*)plant->myOrder->data)->productName;
-//    printf("this is product %s", orderNumber);
-}
+};
 
 void setPlantAttributes(struct Plant* plant, const char* name, int productiveForces) {
     strcpy(plant->name, name);
     plant->productiveForces = productiveForces;
     plant->myOrder = NULL;
-//    setOrderValues(order, "1", "1", 1, "1");
-//    plant->myOrder = createNode(NULL);
-}
-
-void addOrder(struct Plant plant, struct Order *order){
-//    addToHead(&plant->myOrder, order);
-    addToTail(&plant.myOrder, order);
-//    printFirstOrderItem(plant);
-
-//    struct Order* order_temp = (struct Order*)get_tail(plant->myOrder);
-//    struct Order* order_temp = (struct Order*)getElementFromIndex(plant->myOrder, 1);
-//    printf("\nThe first order in plant %s is %s. name: %s \n", plant->name, order->orderNumber, order->productName);
+    plant->orderDate = NULL;
 }
 
 void printAllOrderName(struct Node *order_list){
@@ -48,6 +28,23 @@ void printAllOrderName(struct Node *order_list){
         struct Order order = *(struct Order*)getElementFromIndex(order_list, x);
         printf("Obtained order: %s \n", order.productName);
     }
+}
+
+void printFirstOrderItem(struct Plant* plant){  // for testing only
+    struct Order* firstOrder = (struct Order*)get_first(plant->myOrder);
+    int order_size = get_size(plant->myOrder);
+    printf("\nThe first order in plant %s is %s.\n", plant->name, firstOrder->orderNumber);
+    printf("The size is %d \n", order_size);
+}
+
+char* getPlant(int number){
+    if(number == 1)
+        return "Plant_X";
+    if(number == 2)
+        return "Plant_Y";
+    if(number == 3)
+        return "Plant_Z";
+    return "Error";
 }
 
 #endif

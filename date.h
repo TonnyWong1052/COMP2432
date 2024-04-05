@@ -7,6 +7,29 @@
 #ifndef DATE_H
 #define DATE_H
 
+bool isDateLater(const char *date1, const char *date2) {
+    struct tm tm1, tm2;
+    time_t t1, t2;
+
+    memset(&tm1, 0, sizeof(struct tm));
+    memset(&tm2, 0, sizeof(struct tm));
+
+    strptime(date1, "%Y-%m-%d", &tm1);
+    strptime(date2, "%Y-%m-%d", &tm2);
+
+    t1 = mktime(&tm1);
+    t2 = mktime(&tm2);
+
+    return difftime(t1, t2) > 0;
+}
+
+
+void removeNewline(char *str) {
+    char *newlinePos;
+    while ((newlinePos = strchr(str, '\n')) != NULL)
+        *newlinePos = '\0';
+}
+
 int isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -14,27 +37,47 @@ int isLeapYear(int year) {
 int getDaysInMonth(int month, int year) {
     int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (month == 2 && isLeapYear(year)) {
-        return 29; // February in a leap year
+        return 29;
     }
     return daysInMonth[month - 1];
 }
 
-void addOneDay(char *date) {
+void addOneDay(char *date, char *outputDate) {    // input 2024-02-29 --> output 2024-03-01
     int year, month, day;
     sscanf(date, "%d-%d-%d", &year, &month, &day);
 
-    day++; // Increment the day
+    day++;
     if (day > getDaysInMonth(month, year)) {
-        day = 1; // First day of the next month
-        month++; // Increment the month
-        if (month > 12) { // If month exceeds December, increment the year
-            month = 1; // January
-            year++; // Next year
+        day = 1;
+        month++;
+        if (month > 12) {
+            month = 1;
+            year++;
         }
     }
 
-    sprintf(date, "%d-%02d-%02d", year, month, day); // Write the new date back to the string
+    sprintf(outputDate, "%d-%02d-%02d", year, month, day);
 }
+
+void addDays(char *date, int daysToAdd, char *outputDate) {
+    int year, month, day;
+    sscanf(date, "%d-%d-%d", &year, &month, &day);
+
+    for (int i = 0; i < daysToAdd; i++) {
+        day++;
+        if (day > getDaysInMonth(month, year)) {
+            day = 1;
+            month++;
+            if (month > 12) {
+                month = 1;
+                year++;
+            }
+        }
+    }
+
+    sprintf(outputDate, "%d-%02d-%02d", year, month, day);
+}
+
 
 int calculateDaysBetweenDate(const char* startDateStr, const char* endDateStr) {
     struct tm startDate = {0};
