@@ -3,6 +3,9 @@
 #include "../date.h"
 #include <stdio.h>
 
+#ifndef PLS_REPORT_H
+#define PLS_REPORT_H
+
 void writeOutputFile(char *algo_name, Node *reject_order_list, Node *receive_order_list, struct Plant plants[3], int period_day, char* output_file_name) {
     FILE *file = fopen(output_file_name, "w");
 
@@ -110,3 +113,5 @@ void printPlantSchedule(struct Plant *plant, int period_day, char *start_date, c
         addOneDay(date_table, date_table);
     }
 }
+
+#endif

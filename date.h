@@ -3,9 +3,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #ifndef DATE_H
 #define DATE_H
+
+void closeChannel(int *channel[3], int index) {
+    int x;
+    for (x = 0; x < 3; x++)
+        close((channel[x])[index]);
+}
 
 bool isDateLater(const char *date1, const char *date2) {
     struct tm tm1, tm2;
@@ -62,8 +69,8 @@ void addOneDay(char *date, char *outputDate) {    // input 2024-02-29 --> output
 void addDays(char *date, int daysToAdd, char *outputDate) {
     int year, month, day;
     sscanf(date, "%d-%d-%d", &year, &month, &day);
-
-    for (int i = 0; i < daysToAdd; i++) {
+    int i;
+    for (i = 0; i < daysToAdd; i++) {
         day++;
         if (day > getDaysInMonth(month, year)) {
             day = 1;

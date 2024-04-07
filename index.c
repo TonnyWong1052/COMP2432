@@ -1,8 +1,10 @@
 #include "object/plant.h"
 #include "object/order.h"
 #include "algorithm/FCFS.c"
+#include "algorithm/PR.c"
+#include "algorithm/SJF.c"
 #include "date.h"
-#include "data_structure/LinkedList.h"
+#include "LinkedList.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +24,7 @@ void addPERIOD(char input_command[50], char (*start_date)[11], char (*end_date)[
         strncpy(*start_date, input_command + 10, 10);
         strncpy(*end_date, input_command + 21, 10);
     } else {
-        printf("Your command format is invalid: Correct format 'addPeriod YYYY-MM-DD YYYY-MM-DD'\n");
+        printf("ERROR 001: Your command format is invalid: Correct format 'addPERIOD YYYY-MM-DD YYYY-MM-DD'\n");
     }
 }
 
@@ -42,17 +44,17 @@ void addORDER(char input_command[50], Node **order_list) {
     char *endptr;
     strtol(quantity, &endptr, 10);
     if (*endptr != '\0') {  // check quantity is an integer
-        printf("Error 200 : quantity is not integer\n");
+        printf("Error 100 : quantity is not integer\n");
         return;
     } else if (orderNumber == NULL || dueDate == NULL || quantity == NULL || productName == NULL ||
                strcmp(productName, "\n") == 0) {
-        printf("Error 201 : Your command format is invalid: Correct format 'addORDER P0001 2024-06-10 2000 Product_A'\n");
+        printf("Error 101 : Your command format is invalid: Correct format 'addORDER P0001 2024-06-10 2000 Product_A'\n");
         return;
     } else if (!date_is_valid(dueDate)) {   // date format
-        printf("Error 202 : Your Date format is invalid: Correct format '2024-06-30'\n");
+        printf("Error 102 : Your Date format is invalid: Correct format '2024-06-30'\n");
         return;
     } else if (additionalFormat != 0) {  // command format
-        printf("Error 203 : Your command format is invalid: Correct format 'addORDER P0001 2024-06-10 2000 Product_A'\n");
+        printf("Error 103 : Your command format is invalid: Correct format 'addORDER P0001 2024-06-10 2000 Product_A'\n");
         return;
     }
     int quantity_int = atoi(quantity);
@@ -71,11 +73,11 @@ void addBATCH(char input_command[50], Node **order_list) {
     char *additionalFormat = strtok(NULL, " ");
     // addBATCH orderBATCH01.dat
     if (additionalFormat != 0) {  // command format
-        printf("Your command format is invalid: Correct format 'addBATCH [Orders in a batch file]'\n");
+        printf("Error 202 : Your command format is invalid: Correct format 'addBATCH [Orders in a batch file]'\n");
         return;
     }
-    removeNewline(fileName);
 
+    removeNewline(fileName);
     FILE *file = fopen(fileName, "r");
     if (file == NULL) {
         printf("File not found!\n");
@@ -138,9 +140,9 @@ void runPLS(char input_command[50], Node **order_list, char start_date[11], char
     if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
         FCFSalgo(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "PR") == 0)
-        printf("PR algo TBC");
+        PRalgo(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "SJF") == 0)
-        printf("SJF algo TBC");
+        SJFalgo();
     else
         printf("Error 407: Input '%s' algorithm not existing", algorithm);
 

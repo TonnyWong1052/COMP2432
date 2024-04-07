@@ -1,22 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../data_structure/LinkedList.h"
+#include "../LinkedList.h"
 #include "../object/order.h"
 #include "../object/receive_order_info.h"
-#include "runPLS_report.c"
+#include "runPLS_report.h"
 #include <unistd.h>
 #include <stdbool.h>
 
 // plant_X, plant_Y, plant_Z
 #define plantCount 3
 
-void closeChannel(int *channel[3], int index) {
-    int x;
-    for (x = 0; x < 3; x++)
-        close((channel[x])[index]);
-}
-
-void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, const char *start_date, char *end_date) {
+void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, char *start_date, char *end_date) {
     close(pc[1]);
     close(cp[0]);
     bool list_have_order = true;
@@ -77,13 +71,13 @@ void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, con
     write(cp[1], &trash_value, sizeof(trash_value));
     close(pc[0]);
     close(cp[1]);
-    exit(0);
 }
 
 void processComput(int pc[2], int cp[2], struct Plant *plant, int period_day, char *start_date, char *end_date) {
     int child_id = fork();
     if (child_id == 0) {
         childProcess(pc, cp, plant, period_day, start_date, end_date);
+        exit(0);
     }
 }
 
@@ -92,15 +86,15 @@ void FCFSalgo(Node **order_list, struct Plant plants[3], char *start_date, char 
     int cpX[2], cpY[2], cpZ[2];
     int *pc[] = {pcX, pcY, pcZ};
     int *cp[] = {cpX, cpY, cpZ};
-
+    int x;
     int period_day = calculateDaysBetweenDate(start_date, end_date) + 1;
-    for (int x = 0; x < plantCount; x++) {
+    for (x = 0; x < plantCount; x++) {
         pipe(pc[x]);
         pipe(cp[x]);
         processComput(pc[x], cp[x], &plants[x], period_day, start_date, end_date);
     }
 
-    closeChannel(pc, 0);
+    closeChannel(pc, 0);    // close all pipe channel with their index
     closeChannel(cp, 1);
     int round = 0, reject_order_count = 0;
     bool list_have_order = true;
@@ -159,14 +153,12 @@ void FCFSalgo(Node **order_list, struct Plant plants[3], char *start_date, char 
 //        printf("round\n");
     }
 
-    int x;
     for (x = 0; x < plantCount; x++)
-        wait(NULL);
+        wait(NULL); // wait for all child process is finish
 
     closeChannel(pc, 1);
     closeChannel(cp, 0);
 
     printf("\n");
     writeOutputFile("FCFS", reject_order_list, receive_order_list, plants, period_day, output_file_name);
-
 }

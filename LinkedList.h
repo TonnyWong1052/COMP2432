@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../object/order.h"
+#include "object/order.h"
 
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
