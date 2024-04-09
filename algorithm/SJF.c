@@ -233,7 +233,7 @@ void SJFalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
             // if current all plant unable to handle the qty of order, let's move it to reject_order_list
             int current_plant_production = plant_production_to_order_due[0] + plant_production_to_order_due[1] +
                                            plant_production_to_order_due[2];
-            printf("dubug: %d\n",current_plant_production);
+
             if (current_plant_production < order->quantity)
                 reject_order_count = 3; // move it to reject_order_list (met the following condition)
             else {

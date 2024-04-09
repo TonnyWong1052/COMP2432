@@ -165,13 +165,27 @@ int main() {
         fgets(input_command, sizeof(input_command), stdin);
 
         if (strncmp(input_command, "test", 4) == 0) {   // for testing only !!!
-            strcpy(input_command, "addPERIOD 2024-04-01 2024-04-11");
+//            FCFS
+            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
             addPERIOD(input_command, &start_date, &end_date);
-            strcpy(input_command, "addBATCH orderBATCH03.dat");
+            strcpy(input_command, "addBATCH orderBATCH01.dat");
             addBATCH(input_command, &order_list);
-//            printDATA(start_date, end_date, order_list);
-            strcpy(input_command, "runPLS SJF | printREPORT > report_03_SJF.txt");
+            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
             runPLS(input_command, &order_list, start_date, end_date, plants);
+//            PR algo
+//            strcpy(input_command, "addPERIOD 2024-05-01 2024-05-20");
+//            addPERIOD(input_command, &start_date, &end_date);
+//            strcpy(input_command, "addBATCH orderBATCH02.dat");
+//            addBATCH(input_command, &order_list);
+//            strcpy(input_command, "runPLS PR | printREPORT > report_02_PR.txt);
+//            runPLS(input_command, &order_list, start_date, end_date, plants);
+//            SJF algot
+//            strcpy(input_command, "addPERIOD 2024-04-01 2024-04-11");
+//            addPERIOD(input_command, &start_date, &end_date);
+//            strcpy(input_command, "addBATCH orderBATCH03.dat");
+//            addBATCH(input_command, &order_list);
+//            strcpy(input_command, "runPLS SJF | printREPORT > report_03_SJF.txt");
+//            runPLS(input_command, &order_list, start_date, end_date, plants);
         } else if (strncmp(input_command, "addPERIOD", 9) == 0) {
             addPERIOD(input_command, &start_date, &end_date); // addPERIOD 2024-06-01 2024-06-30
         } else if (strncmp(input_command, "addORDER", 8) == 0) {
