@@ -1,0 +1,17 @@
+
+
+
+// FCFS algo
+addPERIOD 2024-06-01 2024-06-11
+addBATCH orderBATCH01.dat
+runPLS FCFS | printREPORT > report_01_FCFS.txt
+
+// PR algo
+addPERIOD 2024-05-01 2024-05-20
+addBATCH orderBATCH02.dat
+runPLS PR | printREPORT > report_02_PR.txt
+
+//SJF algo
+addPERIOD 2024-04-01 2024-04-11
+addBATCH orderBATCH03.dat
+runPLS SJF | printREPORT > report_03_SJF.txt

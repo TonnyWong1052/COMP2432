@@ -1,11 +1,13 @@
 
+
 ***PLS Schedule Analysis Report***
 
 Algorithm used: FCFS
 
-There are 8 Orders ACCEPTED. Details are as follows:
+There are 12 Orders ACCEPTED. Details are as follows:
 
-ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          =================================================================================
+ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
+=================================================================================
 P0001           2024-06-01      2024-06-03      3        700        Plant_X        
 P0002           2024-06-01      2024-06-04      4        1500       Plant_Y        
 P0003           2024-06-01      2024-06-02      2        1000       Plant_Z        
@@ -14,6 +16,10 @@ P0005           2024-06-03      2024-06-04      2        800        Plant_Z
 P0006           2024-06-06      2024-06-08      3        800        Plant_X        
 P0007           2024-06-05      2024-06-06      2        800        Plant_Y        
 P0008           2024-06-05      2024-06-06      2        700        Plant_Z        
+P0009           2024-06-01      2024-06-03      3        900        Plant_X        
+P0009           2024-06-01      2024-06-03      3        1000       Plant_Y        
+P0010           2024-06-01      2024-06-02      2        600        Plant_Y        
+P0010           2024-06-01      2024-06-01      1        400        Plant_Z        
 
                   - End -
 
@@ -21,7 +27,8 @@ P0008           2024-06-05      2024-06-06      2        700        Plant_Z
 
 There are 2 Orders REJECTED. Details are as follows:
 
-ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY =================================================================================
+ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY 
+=================================================================================
 P0012           Product_L       2023-06-12      1000     
 P0013           Product_M       2023-06-12      1500     
 
@@ -32,19 +39,19 @@ P0013           Product_M       2023-06-12      1500
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                      0 day
-            Number of products produced:                0 (in total)
-            Utilization of the plant:                 0.0 %
+            Number of days in use:                     11 day
+            Number of products produced:             2900 (in total)
+            Utilization of the plant:                87.9 %
 
 Plant_Y:
-            Number of days in use:                      0 day
-            Number of products produced:                0 (in total)
-            Utilization of the plant:                 0.0 %
+            Number of days in use:                     11 day
+            Number of products produced:             3900 (in total)
+            Utilization of the plant:                88.6 %
 
 Plant_Z:
-            Number of days in use:                      0 day
-            Number of products produced:                0 (in total)
-            Utilization of the plant:                 0.0 %
+            Number of days in use:                      7 day
+            Number of products produced:             2900 (in total)
+            Utilization of the plant:                52.7 %
 
-Overall of utilization:                               0.0 %
+Overall of utilization:                              76.4 %
 

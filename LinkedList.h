@@ -21,6 +21,9 @@ int get_size(Node* head);
 void* get_first(Node* head);
 void* get_tail(Node* head);
 void* getElementFromIndex(Node* head, int index);
+void deleteElementFromIndex(Node** head, int index);
+void deleteList(Node** head);
+void clearLinkedList(Node** head);
 
 Node* createNode(void* data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
@@ -159,7 +162,6 @@ void* get_tail(Node* head) {
 }
 
 void* getElementFromIndex(Node* head, int index) {
-    // Check if the index is negative or the list is empty
     if (index < 0 || head == NULL) {
         return NULL;
     }
@@ -167,17 +169,68 @@ void* getElementFromIndex(Node* head, int index) {
     Node* current = head;
     int count = 0;
 
-    // Traverse the list until the end or the desired index is reached
     while (current != NULL) {
         if (count == index) {
-            return current->data; // Return the data of the current node
+            return current->data;
         }
         count++;
         current = current->next;
     }
 
-    // If the loop completes without returning, the index was out of bounds
     return NULL;
+}
+
+void deleteElementFromIndex(Node** head, int index) {
+    if (index < 0 || *head == NULL) {
+        return;
+    }
+
+    Node* temp = *head;
+    if (index == 0) {
+        *head = temp->next;
+        free(temp);
+        return;
+    }
+
+    for (int i = 0; temp != NULL && i < index - 1; i++) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL || temp->next == NULL) {
+        return;
+    }
+
+    Node* next = temp->next->next;
+
+    free(temp->next);
+
+    temp->next = next;
+}
+
+void freeList(Node** head) {
+    Node* current = *head;
+    Node* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;
+        free(current->data);
+        free(current);
+        current = next;
+    }
+
+    *head = NULL;
+}
+
+void clearLinkedList(Node** head) {
+    Node* current = *head;
+    Node* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    *head = NULL;
 }
 
 

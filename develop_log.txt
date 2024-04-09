@@ -36,3 +36,9 @@ Algorithm : (FCFS, PR, SJF, ???)
 FCFS completed
 plant report generation
 
+2024-4-9
+FCFS, PR, SJF completed
+
+TBC(designed algo and innovatibe)
+
+

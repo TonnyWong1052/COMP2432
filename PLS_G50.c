@@ -19,7 +19,6 @@ void addPERIOD(char input_command[50], char (*start_date)[11], char (*end_date)[
     temp_start_date[10] = '\0', temp_send_date[10] = '\0';
 
     int isContainAdditionalFormat = strcmp(input_command + 32, "") == 0;
-//    printf("%d", isContainAdditionalFormat);
     if (date_is_valid(temp_start_date) && date_is_valid(temp_send_date) && isContainAdditionalFormat != 0) {
         strncpy(*start_date, input_command + 10, 10);
         strncpy(*end_date, input_command + 21, 10);
@@ -61,9 +60,6 @@ void addORDER(char input_command[50], Node **order_list) {
 
     struct Order *order = malloc(sizeof(struct Order));
     setOrderValues(order, orderNumber, dueDate, quantity_int, productName);
-//    if (order_list == NULL)
-//        createNode(order);
-//    else
     addToTail(order_list, order);
 }
 
@@ -80,7 +76,7 @@ void addBATCH(char input_command[50], Node **order_list) {
     removeNewline(fileName);
     FILE *file = fopen(fileName, "r");
     if (file == NULL) {
-        printf("File not found!\n");
+        printf("Error 203 : File not found!\n");
         return;
     }
 
@@ -104,9 +100,8 @@ void runPLS(char input_command[50], Node **order_list, char start_date[11], char
 
     // runPLS FCFS | printREPORT > report_01_FCFS.txt
     // Input exception handle
-    // error handle test case: 'runPLS FCFS | printREPORT > ', 'runPLS FCFS Z printREPORT > report_01_FCFS.txt',
-    // , 'runPLS FCFS | printREPORT ? report_01_FCFS.txt', 'runPLS FCFS Z printEXcel > report_01_FCFS.txt'
-    //  printf("\ntest: %s %s %s %s outputReport:|%s|\n", algorithm, pipeOperator, printREPORT, greaterSign, outputReport);
+    // test case: 'runPLS FCFS | printREPORT > ', 'runPLS FCFS Z printREPORT > report_01_FCFS.txt',
+    // 'runPLS FCFS | printREPORT ? report_01_FCFS.txt', 'runPLS FCFS Z printEXcel > report_01_FCFS.txt'
 
     if (algorithm == NULL || pipeOperator == NULL || printREPORT == NULL || greaterSign == NULL ||
         outputReport == NULL || strcmp(outputReport, "\n") == 0) {
@@ -132,21 +127,16 @@ void runPLS(char input_command[50], Node **order_list, char start_date[11], char
         return;
     }
 
-
-//    printf("current period day: %d\n", period_day);
-    // create channel for parent to child and child to parent
-//        struct Order *order = (struct Order *) get_tail(order_list);
-//    printOrderList(&order_list);
     if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
         FCFSalgo(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "PR") == 0)
-        PRalgo(order_list, plants, start_date, end_date, outputReport);
+        PRSalgo(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "SJF") == 0)
-        SJFalgo();
+        SJFalgo(order_list, plants, start_date, end_date, outputReport);
     else
         printf("Error 407: Input '%s' algorithm not existing", algorithm);
-
-//    printFirstOrderItem(&plants[1]);
+//    free(order_list);
+//    order_list = malloc(sizeof(struct Order));
 }
 
 void printDATA(char start_date[11], char end_date[11], Node *order_list) {
@@ -175,12 +165,12 @@ int main() {
         fgets(input_command, sizeof(input_command), stdin);
 
         if (strncmp(input_command, "test", 4) == 0) {   // for testing only !!!
-            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
+            strcpy(input_command, "addPERIOD 2024-04-01 2024-04-11");
             addPERIOD(input_command, &start_date, &end_date);
-            strcpy(input_command, "addBATCH orderBATCH01.dat");
+            strcpy(input_command, "addBATCH orderBATCH03.dat");
             addBATCH(input_command, &order_list);
 //            printDATA(start_date, end_date, order_list);
-            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
+            strcpy(input_command, "runPLS SJF | printREPORT > report_03_SJF.txt");
             runPLS(input_command, &order_list, start_date, end_date, plants);
         } else if (strncmp(input_command, "addPERIOD", 9) == 0) {
             addPERIOD(input_command, &start_date, &end_date); // addPERIOD 2024-06-01 2024-06-30

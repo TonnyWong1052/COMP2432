@@ -47,4 +47,13 @@ char* getPlant(int number){
     return "Error";
 }
 
+void releasePlantData(struct Plant plant){
+    while (get_size(plant.orderDate) != 0) {
+        delete_begin(&plant.orderDate);
+    }
+    while (get_size(plant.myOrder) != 0) {
+        delete_begin(&plant.myOrder);
+    }
+}
+
 #endif

@@ -8,6 +8,28 @@
 #ifndef DATE_H
 #define DATE_H
 
+int calculate_productive_day(int qty, int plantProductiveForces) {
+    //  int expected_day_production = (order->quantity + plantProductiveForces / 2) / plantProductiveForces;
+    int expected_day_production = 0;
+    while (qty > 0) {  // to calculate the required day for the order, then return 'expected_day_production'
+        qty -= plantProductiveForces;
+        expected_day_production++;
+    }
+    return expected_day_production;
+}
+
+void removeSpaces(char* str) {
+    int i = 0, j = 0;
+
+    while (str[i]) {
+        if (str[i] != ' ') {
+            str[j++] = str[i];
+        }
+        i++;
+    }
+    str[j] = '\0';
+}
+
 void closeChannel(int *channel[3], int index) {
     int x;
     for (x = 0; x < 3; x++)
