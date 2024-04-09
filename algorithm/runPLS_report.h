@@ -14,9 +14,10 @@ void writeOutputFile(char *algo_name, Node *reject_order_list, Node *receive_ord
         return;
     }
 
+//    printf("My order: %d %d \n", get_size(plants[0].orderDate), get_size(plants[0].myOrder) );
     int x;
-    int plants_number_day[] = {get_size(plants[0].orderDate), get_size(plants[1].orderDate),
-                               get_size(plants[2].orderDate)};
+    int plants_number_day[] = {getNumDay(plants[0].orderDate), getNumDay(plants[1].orderDate),
+                               getNumDay(plants[2].orderDate)};
     double plants_number_products[] = {0, 0, 0};
     double plants_utilization[3];
 
@@ -110,7 +111,7 @@ void printPlantSchedule(struct Plant *plant, int period_day, char *start_date, c
             delete_begin(&plant->orderDate);
         } else
             printf("%-15s| %-15s| %-15s| %-15s| %-15s|\n", date_table, "NA", "", "", "");
-        addOneDay(date_table, date_table);
+        addOneDay(date_table);
     }
 }
 

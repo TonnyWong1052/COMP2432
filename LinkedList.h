@@ -51,6 +51,18 @@ void printList(Node* head) {
     printf("NULL\n");
 }
 
+int getNumDay(Node* head){
+    int count = 0;
+    Node* temp = head;
+    while (temp != NULL) {
+        void* temp_data = temp->data;
+        int quantity = ((struct Order*)temp_data)->quantity;
+        count += quantity;
+        temp = temp->next;
+    }
+    return count;
+}
+
 void printOrderList(Node* head) {
     Node* temp = head;
     while (temp != NULL) {

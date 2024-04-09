@@ -175,7 +175,7 @@ int main() {
         fgets(input_command, sizeof(input_command), stdin);
 
         if (strncmp(input_command, "test", 4) == 0) {   // for testing only !!!
-            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-20");
+            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
             addPERIOD(input_command, &start_date, &end_date);
             strcpy(input_command, "addBATCH orderBATCH01.dat");
             addBATCH(input_command, &order_list);

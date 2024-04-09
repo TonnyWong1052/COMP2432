@@ -49,7 +49,7 @@ int getDaysInMonth(int month, int year) {
     return daysInMonth[month - 1];
 }
 
-void addOneDay(char *date, char *outputDate) {    // input 2024-02-29 --> output 2024-03-01
+void addOneDay(char *date) {    // input 2024-02-29 --> output 2024-03-01
     int year, month, day;
     sscanf(date, "%d-%d-%d", &year, &month, &day);
 
@@ -63,7 +63,7 @@ void addOneDay(char *date, char *outputDate) {    // input 2024-02-29 --> output
         }
     }
 
-    sprintf(outputDate, "%d-%02d-%02d", year, month, day);
+    sprintf(date, "%d-%02d-%02d", year, month, day);
 }
 
 void addDays(char *date, int daysToAdd, char *outputDate) {

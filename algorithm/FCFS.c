@@ -10,45 +10,63 @@
 // plant_X, plant_Y, plant_Z
 #define plantCount 3
 
+
+int checkOrderAvailable(char temp_date[11], char dueDate[11], int *remainAvailableDay, int expected_day_production) {
+    int is_receive_order;
+    if (isDateLater(temp_date, dueDate)) {
+        is_receive_order = -1;  // -1 : order due date not match date
+    } else if (remainAvailableDay - expected_day_production < 0) {
+        is_receive_order = 0;  // 0 : not enough Productive Forces
+    } else {
+        *remainAvailableDay -= expected_day_production;  // Deduct the expected production days from the remaining available days
+        is_receive_order = 1;   // 1 : plant have ability to receive the order
+    }
+    return is_receive_order;
+}
+
+int calculate_productive_day(int qty, int plantProductiveForces) {
+    //  int expected_day_production = (order->quantity + plantProductiveForces / 2) / plantProductiveForces;
+    int expected_day_production = 0;
+    while (qty > 0) {  // to calculate the required day for the order, then return 'expected_day_production'
+        qty -= plantProductiveForces;
+        expected_day_production++;
+    }
+    return expected_day_production;
+}
+
 void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, char *start_date, char *end_date) {
     close(pc[1]);
     close(cp[0]);
-    bool list_have_order = true;
+    int list_have_order = 1;
     int plantProductiveForces = plant->productiveForces;
     int remainAvabiliableDay = period_day;
+    int expected_day_production = 0;
     char plant_new_avab_day[11];
     strcpy(plant_new_avab_day, start_date);
+
+    struct Order *order = malloc(sizeof(struct Order));
     while (true) {
+        // list_have_order = 0 : not order, shut down the process. list_have_order = 1 : parent send order to child.
+        // list_have_order = -1, parent ask for current start date
         read(pc[0], &list_have_order, sizeof(list_have_order));
-        if (!list_have_order)
+        if (list_have_order == 0)
             break;
-
-        struct Order *order = malloc(sizeof(struct Order));
-        read(pc[0], order, sizeof(struct Order));
-        int expected_day_production = (order->quantity + plantProductiveForces / 2) / plantProductiveForces;
-
-        int is_receive_order;
-//        printf("%d - %d \n", remainAvabiliableDay, expected_day_production);
-
-        char temp_date[11];
-        strcpy(temp_date, plant_new_avab_day);
-        addDays(plant_new_avab_day, expected_day_production, temp_date);
-//        printf("two date %s %s\n", temp_date, order->dueDate);
-
-        if (remainAvabiliableDay - expected_day_production > 0 && !isDateLater(temp_date, order->dueDate)) {
-            remainAvabiliableDay = remainAvabiliableDay - expected_day_production;
-            is_receive_order = 1;   // plant have ability to receive the order
-        } else {
-            is_receive_order = 0;   // plant reject the order
-        }
-//        printf("plant name %s , day production : %d, order qty: %d, ability: %d, remain dat: %d\n", plant->name,
-//               expected_day_production, order.quantity, plantProductiveForces, remainAvabiliableDay);
-//        printf("plant %s, qty: %d received order: %s\n", plant->name, order.quantity, order.productName);
-        write(cp[1], &is_receive_order, sizeof(is_receive_order));
-        if (is_receive_order == 1) {
+        else if (list_have_order == -1) {
+//            printf("firstTest %s\n", plant_new_avab_day);
+            write(cp[1], &plant_new_avab_day, sizeof(plant_new_avab_day));
+            write(cp[1], &remainAvabiliableDay, sizeof(remainAvabiliableDay));
+            continue;   // complete this command, then wait for receive command of 'list_have_order'
+        } else if (list_have_order == 2) {  // parent directly insert order to child without any response to parent
+            // directly insert the order to order list of plant
+            read(pc[0], order, sizeof(struct Order));
+            char temp_date[11];
+            strcpy(temp_date, plant_new_avab_day);
+            expected_day_production = calculate_productive_day(order->quantity, plant->productiveForces);
+            addDays(plant_new_avab_day, expected_day_production, temp_date);
+            remainAvabiliableDay -= expected_day_production;
             addToTail(&plant->myOrder, order);
             int qty = order->quantity, current_day_qty;
-            while (qty > 0) {
+            while (qty > 0) {   // calculate the expected schedule of the day, such as required qty of the day
                 if (qty > plantProductiveForces)
                     current_day_qty = plantProductiveForces;
                 else
@@ -58,17 +76,66 @@ void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, cha
                 setOrderValues(day_order, order->orderNumber, order->dueDate, current_day_qty, order->productName);
                 addToTail(&plant->orderDate, day_order);
             }
+            continue;
+        }
+
+        // if order received this order, check how many day the plant needs to process
+        read(pc[0], order, sizeof(struct Order));
+
+        // calculate the period day, how long the order need to complete
+        expected_day_production = calculate_productive_day(order->quantity, plant->productiveForces);
+
+        char temp_date[11];
+        strcpy(temp_date, plant_new_avab_day);  // clone 'plant_new_avab_day' to 'temp_Date' without address memory
+        addDays(plant_new_avab_day, expected_day_production, temp_date);    // calculate the complete date
+
+        // check should the plant receive the order. if reject it, return the reason
+        // send confirm message : is_receive_order = 1 : receive the oder, 0 : not enough Productive Forces, -1 : order due date not match date
+        int is_receive_order;
+        if (isDateLater(temp_date, order->dueDate)) {
+            is_receive_order = -1;  // -1 : order due date not match date
+        } else if (remainAvabiliableDay - expected_day_production < 0)
+            is_receive_order = 0;  // 0 : not enough Productive Forces
+        else {
+            remainAvabiliableDay = remainAvabiliableDay - expected_day_production;
+            is_receive_order = 1;   // 1 : plant have ability to receive the order
+        }
+//        is_receive_order = checkOrderAvailable(temp_date, order->dueDate, &remainAvabiliableDay, expected_day_production);
+//        printf("plant name %s , day production : %d, order qty: %d, ability: %d, remain dat: %d\n", plant->name,
+//               expected_day_production, order.quantity, plantProductiveForces, remainAvabiliableDay);
+//        printf("status message: %d, %s: qty: %d received order:%s \n", is_receive_order, plant->name, order->quantity,
+//               order->productName);
+
+        // after detection, if the order is valid, inserting it to order list and send message to parent
+        write(cp[1], &is_receive_order, sizeof(is_receive_order));
+
+        if (is_receive_order == 1) {
+            addToTail(&plant->myOrder, order);
+            int qty = order->quantity, current_day_qty;
+            while (qty > 0) {   // calculate the expected schedule of the day, such as required qty of the day
+                if (qty > plantProductiveForces)
+                    current_day_qty = plantProductiveForces;
+                else
+                    current_day_qty = qty;
+                qty -= current_day_qty;
+                struct Order *day_order = malloc(sizeof(struct Order));
+                setOrderValues(day_order, order->orderNumber, order->dueDate, current_day_qty, order->productName);
+                addToTail(&plant->orderDate, day_order);
+            }
+
+            // send data back to parent process in order to print the runPLS_report
             write(cp[1], plant_new_avab_day, strlen(plant_new_avab_day) + 1);
             addDays(plant_new_avab_day, expected_day_production - 1, plant_new_avab_day);
             write(cp[1], plant_new_avab_day, strlen(plant_new_avab_day) + 1);
             write(cp[1], &expected_day_production, sizeof(int));
             write(cp[1], &order->quantity, sizeof(order->quantity));
-            addOneDay(plant_new_avab_day, plant_new_avab_day);
+            addOneDay(plant_new_avab_day);
         }
     }
+
     printPlantSchedule(plant, period_day, start_date, end_date);
     int trash_value = -1;
-    write(cp[1], &trash_value, sizeof(trash_value));
+    write(cp[1], &trash_value, sizeof(trash_value));   // send trash_value to inform parent, child process is close
     close(pc[0]);
     close(cp[1]);
 }
@@ -97,36 +164,41 @@ void FCFSalgo(Node **order_list, struct Plant plants[3], char *start_date, char 
     closeChannel(pc, 0);    // close all pipe channel with their index
     closeChannel(cp, 1);
     int round = 0, reject_order_count = 0;
-    bool list_have_order = true;
+    int inform_child_message = 1;
     Node *reject_order_list = NULL, *receive_order_list = NULL;;
+
+    // calculate the remaining productive forces of all plant, such as plant_X : 300(productiveForces) * 30(period_day) = 900
+//    int plant_remain_productive_forces[] = {plants[0].productiveForces * period_day,
+//                                            plants[1].productiveForces * period_day,
+//                                            plants[2].productiveForces * period_day};
     while (true) {
-        list_have_order = get_size(*order_list) > 0;
-        if (list_have_order == true)
-            write((pc[round % plantCount])[1], &list_have_order, sizeof(list_have_order));
+        inform_child_message = get_size(*order_list) > 0;   // seek does order list have any order
+        if (inform_child_message == 1)
+            write((pc[round % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
         else {
             int completedReport;
-            // inform all child process, shut down the while loop and print their report one by one
-            write((pc[0])[1], &list_have_order, sizeof(list_have_order));
+            inform_child_message = 0;    // inform_child_message = 0 is equals list do not have order
+            // inform all child process, shut down while loop and print their report one by one
+            write((pc[0])[1], &inform_child_message, sizeof(inform_child_message));
             read((cp[0])[0], &completedReport, sizeof(completedReport));
-            write((pc[1])[1], &list_have_order, sizeof(list_have_order));
+            write((pc[1])[1], &inform_child_message, sizeof(inform_child_message));
             read((cp[1])[0], &completedReport, sizeof(completedReport));
-            write((pc[2])[1], &list_have_order, sizeof(list_have_order));
+            write((pc[2])[1], &inform_child_message, sizeof(inform_child_message));
             read((cp[2])[0], &completedReport, sizeof(completedReport));
             break;
         }
 
         struct Order *order = get_first(*order_list);
-//        printf("round: %d Send order: %s", round % plantCount, order->productName);
+
         // Send the order to plant (child process)
         write((pc[round % plantCount])[1], order, sizeof(struct Order));
 
         int is_receive_order;
         read((cp[round % plantCount])[0], &is_receive_order, sizeof(is_receive_order));
-
-//        printf("is_receive_order: %d", is_receive_order);
+        // receive message from child:
+        // is_receive_order = 1 : receive the order . if equal 0 : not enough Productive Forces . if equal -1 : order due date not match date
         if (is_receive_order == 1) {
             delete_begin(order_list);   // plant accept the order
-            reject_order_count = 0;
 
             int day_period, qty;
             struct receive_order_info *order_info = malloc(sizeof(struct receive_order_info));
@@ -142,23 +214,107 @@ void FCFSalgo(Node **order_list, struct Plant plants[3], char *start_date, char 
                                       plant_name);
             addToTail(&receive_order_list, order_info);
             addToTail(&plants[round % plantCount].orderDate, order_info);
-        } else
-            reject_order_count++;   // the order has been rejected by the plant
+        }
+        if (is_receive_order == -1) { // if order due date not match date, let's find other plant
+            reject_order_count++;   //  the order has been rejected by the plant
+            printf("%s reject order %s with qty %d, message: %d \n", plants[round % plantCount].name,
+                   order->orderNumber,
+                   order->quantity, is_receive_order);
+        } else if (is_receive_order == 0) {
+            // Due to plant do not have enough productive forces
+            // the parent would ask for all child status and evenly place this order to plants (like send product_a to plant_X and plant_Y)
+            printf("%s reject order %s with qty %d, message: %d \n", plants[round % plantCount].name,
+                   order->orderNumber,
+                   order->quantity, is_receive_order);
+
+            inform_child_message = -1;  // -1 is ask for child their status
+            // ask all child process for their current plant status such like available start time
+            write((pc[round % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+            write((pc[(round + 1) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+            write((pc[(round + 2) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+
+            char temp_start_date_first[11], temp_start_date_second[11], temp_start_date_thir[11];
+            char *temp_start_dates[] = {temp_start_date_first, temp_start_date_second, temp_start_date_thir};
+            int remain_avabiliable_day_first = -1, remain_avabiliable_day_second = -1, remain_avabiliable_day_thir = -1;
+            int remain_avabiliable_day[] = {remain_avabiliable_day_first, remain_avabiliable_day_second,
+                                            remain_avabiliable_day_thir};
+            // get value by child process (plant)
+            read((cp[round % plantCount])[0], temp_start_dates[0], sizeof(temp_start_date_first));
+            read((cp[round % plantCount])[0], &remain_avabiliable_day[0],
+                 sizeof(remain_avabiliable_day[0]));
+            read((cp[(round + 1) % plantCount])[0], temp_start_dates[1], sizeof(temp_start_date_second));
+            read((cp[(round + 1) % plantCount])[0], &remain_avabiliable_day[1],
+                 sizeof(remain_avabiliable_day[1]));
+            read((cp[(round + 2) % plantCount])[0], temp_start_dates[2], sizeof(temp_start_date_thir));
+            read((cp[(round + 2) % plantCount])[0], &remain_avabiliable_day[2],
+                 sizeof(remain_avabiliable_day[2]));
+
+            // calculate the available production from the available start date of plant to due date of order
+            int plant_production_to_order_due[] = {0, 0, 0};
+            for (x = 0; x < plantCount; x++) {
+                int count_temp = 0;
+                while (strcmp(temp_start_dates[(round + x) % plantCount], order->dueDate) != 0 &&
+                       remain_avabiliable_day[(round + x) % plantCount] != count_temp) {
+                    plant_production_to_order_due[(round + x) % plantCount] += plants[(round + x) %
+                                                                                      plantCount].productiveForces;
+                    addOneDay(temp_start_dates[(round + x) % plantCount]);
+                    count_temp++;
+                }
+            }
+
+            // if current all plant unable to handle the qty of order, let's move it to reject_order_list
+            int current_plant_production = plant_production_to_order_due[0] + plant_production_to_order_due[1] + plant_production_to_order_due[2];
+            if (current_plant_production < order->quantity)
+                reject_order_count = 3; // move it to reject_order_list (met the following condition)
+            else {
+                // evenly place this order to plant_X, plant_Y, and plant_Z
+                int remain_qty = order->quantity;
+
+//                printf("test : %d", order->quantity);
+                // write message type command, not complete!!!!!!!!!
+                inform_child_message = 2;
+
+                if(plant_production_to_order_due[0]) {
+                    order->quantity = plant_production_to_order_due[0];
+
+                    write((pc[round % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+                    write((pc[round % plantCount])[1], order, sizeof(struct Order)); //double test
+                    remain_qty -= plant_production_to_order_due[0];
+                }
+
+                if(plant_production_to_order_due[1]) {
+                    if (remain_qty < plant_production_to_order_due[1])
+                        order->quantity = remain_qty;   // if the plant can handle all remain qty
+                    else   // if unable handle all remaining qty, as well as possible to process remaining qty
+                        order->quantity = plant_production_to_order_due[1];
+
+                    write((pc[(round + x + 1) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+                    write((pc[(round + x + 1) % plantCount])[1], order, sizeof(struct Order)); //double test
+                    remain_qty -= plant_production_to_order_due[1];
+//                    printf("double test qty %d", order->quantity);
+                }
+
+                if (remain_qty > 0 && plant_production_to_order_due[2]) {
+                    order->quantity = remain_qty;
+                    write((pc[(round + x + 2) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+                    write((pc[(round + x + 2) % plantCount])[1], order, sizeof(struct Order)); //double test
+                }
+                delete_begin(order_list);
+            }
+        }
 
         if (reject_order_count >= plantCount) { // no one plant accept the order, move to reject list
             addToTail(&reject_order_list, order);
             delete_begin(order_list);
+            reject_order_count = 0;
         }
         round++;
-//        printf("round\n");
     }
-
     for (x = 0; x < plantCount; x++)
         wait(NULL); // wait for all child process is finish
 
     closeChannel(pc, 1);
     closeChannel(cp, 0);
-
     printf("\n");
     writeOutputFile("FCFS", reject_order_list, receive_order_list, plants, period_day, output_file_name);
 }
