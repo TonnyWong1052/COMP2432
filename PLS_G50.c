@@ -19,7 +19,7 @@ int main() {
 
     printf("\n   ~~WELCOME TO PLS~~\n\n");
     while (true) {
-        char input_command[50] = "";
+        char input_command[100] = "";
         printf("Please enter:\n> ");
         fgets(input_command, sizeof(input_command), stdin);
 
@@ -59,7 +59,10 @@ int main() {
             exit(0);
         } else if (strncmp(input_command, "printDATA", 9) == 0) {
             printDATA(start_date, end_date, order_list); // printDATA
-        } else {
+        } else if(strcmp(input_command, " ") == 0)
+            continue;
+        else{
+            printf("you command is '%s'", input_command);
             printf("Command not found\n");
         }
     }

@@ -4,7 +4,7 @@
 
 Algorithm used: PR
 
-There are 9 Orders ACCEPTED. Details are as follows:
+There are 8 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
@@ -14,20 +14,18 @@ P0009           2024-05-01      2024-05-02      2        750        Plant_Z
 P0010           2024-05-03      2024-05-09      7        1900       Plant_X        
 P0008           2024-05-04      2024-05-10      7        2600       Plant_Y        
 P0006           2024-05-03      2024-05-09      7        3200       Plant_Z        
-P0002           2024-05-01      2024-05-01      1        300        Plant_Y        
-P0002           2024-05-01      2024-05-02      2        800        Plant_Z        
-P0002           2024-05-01      2024-05-02      2        500        Plant_X        
+P0003           2024-05-10      2024-05-13      4        1100       Plant_X        
+P0002           2024-05-11      2024-05-14      4        1600       Plant_Y        
 
                   - End -
 
 =================================================================================
 
-There are 3 Orders REJECTED. Details are as follows:
+There are 2 Orders REJECTED. Details are as follows:
 
 ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY 
 =================================================================================
 P0007           Product_G       2024-05-10      1300     
-P0003           Product_H       2024-05-01      1100     
 P0001           Product_H       2024-05-10      2100     
 
                   - End -
@@ -37,19 +35,19 @@ P0001           Product_H       2024-05-10      2100
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                     11 day
-            Number of products produced:             3000 (in total)
-            Utilization of the plant:                90.9 %
+            Number of days in use:                     13 day
+            Number of products produced:             3600 (in total)
+            Utilization of the plant:                60.0 %
 
 Plant_Y:
-            Number of days in use:                     11 day
-            Number of products produced:             3800 (in total)
-            Utilization of the plant:                86.4 %
+            Number of days in use:                     14 day
+            Number of products produced:             5100 (in total)
+            Utilization of the plant:                63.7 %
 
 Plant_Z:
-            Number of days in use:                     11 day
-            Number of products produced:             4750 (in total)
-            Utilization of the plant:                86.4 %
+            Number of days in use:                      9 day
+            Number of products produced:             3950 (in total)
+            Utilization of the plant:                39.5 %
 
-Overall of utilization:                              87.9 %
+Overall of utilization:                              54.4 %
 

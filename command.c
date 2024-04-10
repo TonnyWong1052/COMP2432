@@ -4,7 +4,7 @@
 #include "algorithm/SJF.c"
 #include "algorithm/MTS.c"
 
-void addPERIOD(char input_command[50], char (*start_date)[11], char (*end_date)[11]) {
+void addPERIOD(char input_command[100], char (*start_date)[11], char (*end_date)[11]) {
     // 0123456789012345678012345678901 --> char_index
     // addPERIOD 2024-06-01 2024-06-30 --> use case
     // addPERIOD 2024-06-01a 2024-06-30b --> date format error
@@ -22,7 +22,7 @@ void addPERIOD(char input_command[50], char (*start_date)[11], char (*end_date)[
     }
 }
 
-void addORDER(char input_command[50], Node **order_list) {
+void addORDER(char input_command[100], Node **order_list) {
     char *command = strtok(input_command, " ");
     char *orderNumber = NULL, *dueDate = NULL, *quantity = NULL, *productName = NULL;
     orderNumber = strtok(NULL, " ");
@@ -62,7 +62,7 @@ void addORDER(char input_command[50], Node **order_list) {
     addToTail(order_list, order);
 }
 
-void addBATCH(char input_command[50], Node **order_list) {
+void addBATCH(char input_command[100], Node **order_list) {
     char *command = strtok(input_command, " ");
     char *fileName = strtok(NULL, " ");
     char *additionalFormat = strtok(NULL, " ");
@@ -88,7 +88,7 @@ void addBATCH(char input_command[50], Node **order_list) {
     fclose(file);
 }
 
-void runPLS(char input_command[50], Node **order_list, char start_date[11], char end_date[11], struct Plant plants[3]) {
+void runPLS(char input_command[100], Node **order_list, char start_date[11], char end_date[11], struct Plant plants[3]) {
     // runPLS FCFS | printREPORT > report_01_FCFS.txt
     strtok(input_command, " ");
     char *algorithm = NULL, *pipeOperator = NULL, *printREPORT = NULL, *greaterSign = NULL, *outputReport = NULL, *additionalFormat;
