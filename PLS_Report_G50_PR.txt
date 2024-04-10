@@ -4,28 +4,28 @@
 
 Algorithm used: PR
 
-There are 8 Orders ACCEPTED. Details are as follows:
+There are 9 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
 P0004           2024-05-01      2024-05-02      2        600        Plant_X        
-P0005           2024-05-01      2024-05-03      3        900        Plant_Y        
+P0005           2024-05-03      2024-05-05      3        900        Plant_X        
+P0008           2024-05-06      2024-05-14      9        2600       Plant_X        
+P0010           2024-05-01      2024-05-05      5        1900       Plant_Y        
 P0009           2024-05-01      2024-05-02      2        750        Plant_Z        
-P0010           2024-05-03      2024-05-09      7        1900       Plant_X        
-P0008           2024-05-04      2024-05-10      7        2600       Plant_Y        
 P0006           2024-05-03      2024-05-09      7        3200       Plant_Z        
-P0003           2024-05-10      2024-05-13      4        1100       Plant_X        
-P0002           2024-05-11      2024-05-14      4        1600       Plant_Y        
+P0007           2024-05-06      2024-05-09      4        1300       Plant_Y        
+P0003           2024-05-10      2024-05-12      3        1100       Plant_Y        
+P0002           2024-05-10      2024-05-13      4        1600       Plant_Z        
 
                   - End -
 
 =================================================================================
 
-There are 2 Orders REJECTED. Details are as follows:
+There are 1 Orders REJECTED. Details are as follows:
 
 ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY 
 =================================================================================
-P0007           Product_G       2024-05-10      1300     
 P0001           Product_H       2024-05-10      2100     
 
                   - End -
@@ -35,19 +35,19 @@ P0001           Product_H       2024-05-10      2100
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                     13 day
-            Number of products produced:             3600 (in total)
-            Utilization of the plant:                60.0 %
+            Number of days in use:                     14 day
+            Number of products produced:             4100 (in total)
+            Utilization of the plant:                91.1 %
 
 Plant_Y:
-            Number of days in use:                     14 day
-            Number of products produced:             5100 (in total)
-            Utilization of the plant:                63.7 %
+            Number of days in use:                     12 day
+            Number of products produced:             4300 (in total)
+            Utilization of the plant:                71.7 %
 
 Plant_Z:
-            Number of days in use:                      9 day
-            Number of products produced:             3950 (in total)
-            Utilization of the plant:                39.5 %
+            Number of days in use:                     13 day
+            Number of products produced:             5550 (in total)
+            Utilization of the plant:                74.0 %
 
-Overall of utilization:                              54.4 %
+Overall of utilization:                              78.9 %
 

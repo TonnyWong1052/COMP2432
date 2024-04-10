@@ -5,7 +5,7 @@ addBATCH test_data_G50_FCFS.dat
 runPLS FCFS | printREPORT > PLS_Report_G50_FCFS.txt
 
 // PR algo
-addPERIOD 2024-05-01 2024-05-20
+addPERIOD 2024-05-01 2024-05-15
 addBATCH test_data_G50_PR.dat
 runPLS PR | printREPORT > PLS_Report_G50_PR.txt
 

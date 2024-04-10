@@ -4,22 +4,21 @@
 
 Algorithm used: SJF
 
-There are 12 Orders ACCEPTED. Details are as follows:
+There are 11 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
 P0011           2024-04-01      2024-04-02      2        500        Plant_X        
-P0012           2024-04-01      2024-04-02      2        600        Plant_Y        
-P0013           2024-04-01      2024-04-02      2        700        Plant_Z        
-P0014           2024-04-03      2024-04-05      3        800        Plant_X        
-P0015           2024-04-03      2024-04-05      3        900        Plant_Y        
-P0016           2024-04-03      2024-04-05      3        1100       Plant_Z        
-P0017           2024-04-06      2024-04-09      4        1200       Plant_X        
-P0018           2024-04-06      2024-04-09      4        1300       Plant_Y        
-P0019           2024-04-06      2024-04-08      3        1400       Plant_Z        
-P0020           2024-04-01      2024-04-02      2        600        Plant_X        
-P0020           2024-04-01      2024-04-02      2        800        Plant_Y        
-P0020           2024-04-01      2024-04-01      1        100        Plant_Z        
+P0012           2024-04-03      2024-04-04      2        600        Plant_X        
+P0013           2024-04-05      2024-04-07      3        700        Plant_X        
+P0014           2024-04-08      2024-04-10      3        800        Plant_X        
+P0015           2024-04-01      2024-04-01      1        300        Plant_X        
+P0015           2024-04-01      2024-04-02      2        600        Plant_Y        
+P0016           2024-04-01      2024-04-03      3        1100       Plant_Y        
+P0017           2024-04-01      2024-04-03      3        1200       Plant_Y        
+P0018           2024-04-01      2024-04-04      4        1300       Plant_Y        
+P0019           2024-04-01      2024-04-04      4        1400       Plant_Y        
+P0020           2024-04-01      2024-04-04      4        1500       Plant_Y        
 
                   - End -
 
@@ -38,18 +37,18 @@ ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY
 
 Plant_X:
             Number of days in use:                     11 day
-            Number of products produced:             3100 (in total)
-            Utilization of the plant:                93.9 %
+            Number of products produced:             2900 (in total)
+            Utilization of the plant:                87.9 %
 
 Plant_Y:
-            Number of days in use:                     11 day
-            Number of products produced:             3600 (in total)
-            Utilization of the plant:                81.8 %
+            Number of days in use:                     20 day
+            Number of products produced:             7100 (in total)
+            Utilization of the plant:               161.4 %
 
 Plant_Z:
-            Number of days in use:                      9 day
-            Number of products produced:             3300 (in total)
-            Utilization of the plant:                60.0 %
+            Number of days in use:                      0 day
+            Number of products produced:                0 (in total)
+            Utilization of the plant:                 0.0 %
 
-Overall of utilization:                              78.6 %
+Overall of utilization:                              83.1 %
 

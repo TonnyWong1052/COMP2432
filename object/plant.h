@@ -8,6 +8,7 @@
 #define PLANT_H
 
 struct Plant {
+    int id;
     char name[50];
     int productiveForces;
     Node *myOrder;      // record all order, the plant obtained
@@ -15,7 +16,8 @@ struct Plant {
 
 };
 
-void setPlantAttributes(struct Plant* plant, const char* name, int productiveForces) {
+void setPlantAttributes(struct Plant* plant, int id, const char* name, int productiveForces) {
+    plant->id = id;
     strcpy(plant->name, name);
     plant->productiveForces = productiveForces;
     plant->myOrder = NULL;

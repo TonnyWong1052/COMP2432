@@ -9,9 +9,9 @@
 
 int main() {
     struct Plant plants[3];
-    setPlantAttributes(&plants[0], "Plant_X", 300);
-    setPlantAttributes(&plants[1], "Plant_Y", 400);
-    setPlantAttributes(&plants[2], "Plant_Z", 500);
+    setPlantAttributes(&plants[0], 0, "Plant_X", 300);
+    setPlantAttributes(&plants[1], 1, "Plant_Y", 400);
+    setPlantAttributes(&plants[2], 2, "Plant_Z", 500);
 
     char start_date[11] = "", end_date[11] = "";
     start_date[10] = '\0', end_date[10] = '\0';
