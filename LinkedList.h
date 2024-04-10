@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "object/order.h"
+#include "date.h"
 
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
@@ -68,15 +69,18 @@ int getNumDay(Node* head){
 
 void printOrderList(Node* head) {
     Node* temp = head;
+    printf("\n%-15s %-15s %-15s %-15s\n", "ORDER NUMBER", "Due Date", "Quantity", "Product Name");
+
     while (temp != NULL) {
         void* temp_data = temp->data;
         char* orderNumber = ((struct Order*)temp_data)->orderNumber;
         char* dueDate = ((struct Order*)temp_data)->dueDate;
         int quantity = ((struct Order*)temp_data)->quantity;
         char* productName = ((struct Order*)temp_data)->productName;
-
-        printf("Order Number: %s, Due Date: %s, Quantity: %d, Product Name: %s\n",
-               orderNumber, dueDate, quantity, productName);
+        removeNewline(productName);
+        printf("%-15s %-15s %-15d %-15s\n", orderNumber, dueDate, quantity, productName);
+//        printf("Order Number: %s, Due Date: %s, Quantity: %d, Product Name: %s",
+//               orderNumber, dueDate, quantity, productName);
         temp = temp->next;
     }
     printf("\n");
