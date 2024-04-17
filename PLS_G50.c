@@ -25,12 +25,12 @@ int main() {
 
         if (strncmp(input_command, "test", 4) == 0) {   // for testing only !!!
 //            FCFS
-            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
-            addPERIOD(input_command, &start_date, &end_date);
-            strcpy(input_command, "addBATCH test_data_G50_FCFS.dat");
-            addBATCH(input_command, &order_list);
-            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
-            runPLS(input_command, &order_list, start_date, end_date, plants);
+//            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
+//            addPERIOD(input_command, &start_date, &end_date);
+//            strcpy(input_command, "addBATCH test_data_G50_FCFS.dat");
+//            addBATCH(input_command, &order_list);
+//            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
+//            runPLS(input_command, &order_list, start_date, end_date, plants);
 //            PR algo
 //            strcpy(input_command, "addPERIOD 2024-05-01 2024-05-20");
 //            addPERIOD(input_command, &start_date, &end_date);
@@ -45,6 +45,13 @@ int main() {
 //            addBATCH(input_command, &order_list);
 //            strcpy(input_command, "runPLS SJF | printREPORT > report_03_SJF.txt");
 //            runPLS(input_command, &order_list, start_date, end_date, plants);
+//            SJF algot
+            strcpy(input_command, "addPERIOD 2024-03-01 2024-03-15");
+            addPERIOD(input_command, &start_date, &end_date);
+            strcpy(input_command, "addBATCH test_data_G50_MTS.dat");
+            addBATCH(input_command, &order_list);
+            strcpy(input_command, "runPLS MTS | printREPORT > PLS_Report_G50_MTS.txt");
+            runPLS(input_command, &order_list, start_date, end_date, plants);
         } else if (strncmp(input_command, "addPERIOD", 9) == 0) {
             addPERIOD(input_command, &start_date, &end_date); // addPERIOD 2024-06-01 2024-06-30
         } else if (strncmp(input_command, "addORDER", 8) == 0) {
@@ -62,8 +69,8 @@ int main() {
         } else if(strcmp(input_command, " ") == 0)
             continue;
         else{
-            printf("you command is '%s'", input_command);
-            printf("Command not found\n");
+            removeNewline(input_command);
+            printf("Input command '%s' not found\n", input_command);
         }
     }
 }

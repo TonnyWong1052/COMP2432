@@ -119,7 +119,7 @@ void printPlantSchedule(struct Plant *plant, int period_day, char *start_date, c
 //            delete_begin(&plant->orderDate);
         } else
             printf("%-15s| %-15s| %-15s| %-15s| %-15s|\n", date_table, "NA", "", "", "");
-        addOneDay(date_table);
+        addOneDay(date_table, date_table);
     }
 }
 

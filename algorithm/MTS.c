@@ -82,7 +82,6 @@ void MTSchildProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, 
         strcpy(temp_date, plant_new_avab_day);  // clone 'plant_new_avab_day' to 'temp_Date' without address memory
         addDays(plant_new_avab_day, expected_day_production, temp_date);    // calculate the complete date
 
-
         // after detection, if the order is valid, inserting it to order list and send message to parent
         write(cp[1], &is_receive_order, sizeof(is_receive_order));
 
@@ -106,7 +105,7 @@ void MTSchildProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, 
             write(cp[1], plant_new_avab_day, strlen(plant_new_avab_day) + 1);
             write(cp[1], &expected_day_production, sizeof(int));
             write(cp[1], &order->quantity, sizeof(order->quantity));
-            addOneDay(plant_new_avab_day);
+            addDays(plant_new_avab_day, 1, plant_new_avab_day);
         }
     }
 
@@ -141,9 +140,13 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
     closeChannel(pc, 0);    // close all pipe channel with their index
     closeChannel(cp, 1);
     int plant_index = 0, reject_order_count = 0, round = 0;
-    int inform_child_message, current_round_plant = -1;
-//    Node *reject_order_list = (Node*)malloc(sizeof(Node)), *receive_order_list = (Node*)malloc(sizeof(Node));;
+    int inform_child_message = 1;
     Node *reject_order_list = NULL, *receive_order_list = NULL;;
+    int current_round_plant = -1;
+
+    int remainingProductiveForces[3] = {0, 0, 0};
+    int min_date_index = 0;
+
     while (true) {
         if(round >= plantCount) {    // first plant_index, the remaining day of all plants are both equal 0
             inform_child_message = 3;   // ask for which plant can process the product fastly
@@ -163,7 +166,7 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
             plant_index = current_round_plant;
         }
 
-        inform_child_message = get_size(*order_list) > 0;  // seek does order list have any order, if yes, set to 1
+        inform_child_message = get_size(*order_list) > 0;   // seek does order list have any order
         if (inform_child_message == 1)
             write((pc[plant_index % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
         else {
@@ -178,19 +181,9 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
             read((cp[2])[0], &completedReport, sizeof(completedReport));
             break;
         }
-        int hight_PR_index = 0, previous_product_PRvalue = productNameToPRvalue(((struct Order *) getElementFromIndex(*order_list, 0))->productName);
-        for (x = 0; x < get_size(*order_list); x++){
-            struct Order *temp = (struct Order *) getElementFromIndex(*order_list, x);
-            int current_pr = productNameToPRvalue(temp->productName);
-            if(current_pr == 1){    // 1 is highest PR
-                hight_PR_index = x;
-                break;
-            }
-            if(current_pr <= previous_product_PRvalue)    // 1 is minimum value(Product_A), 4 is maximum value
-                hight_PR_index = x, previous_product_PRvalue = current_pr;
-        }
 
-        struct Order *order = getElementFromIndex(*order_list, hight_PR_index);
+//        printf("reject count: %s");
+        struct Order *order = get_first(*order_list);
         // Send the order to plant (child process)
         write((pc[plant_index % plantCount])[1], order, sizeof(struct Order));
 
@@ -199,7 +192,7 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
         // receive message from child:
         // is_receive_order = 1 : receive the order . if equal 0 : not enough Productive Forces . if equal -1 : order due date not match date
         if (is_receive_order == 1) {
-            deleteElementFromIndex(order_list, hight_PR_index); // plant accept the order
+            delete_begin(order_list);   // plant accept the order
 
             int day_period, qty;
             struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
@@ -211,8 +204,7 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
             read((cp[plant_index % plantCount])[0], &qty, sizeof(qty));
             plant_name = getPlant(plant_index % plantCount + 1);
 
-            setReceiveOrderInfoValues(plant_order_info, order->orderNumber, temp_start_date, temp_end_date, day_period,
-                                      qty,
+            setReceiveOrderInfoValues(plant_order_info, order->orderNumber, temp_start_date, temp_end_date, day_period, qty,
                                       plant_name);
             addToTail(&receive_order_list, plant_order_info);
             addToTail(&plants[plant_index % plantCount].orderDate, plant_order_info);
@@ -223,7 +215,6 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
         } else if (is_receive_order == 0) {
             // Due to plant do not have enough productive forces
             // the parent would ask for all child status and evenly place this order to plants (like send product_a to plant_X and plant_Y)
-
             inform_child_message = -1;  // -1 is ask for child their status
             // ask all child process for their current plant status such like available start time
             write((pc[plant_index % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
@@ -252,6 +243,7 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
 
             // if current all plant unable to handle the qty of order, let's move it to reject_order_list
             int current_plant_production = plant_production_to_order_due[plant_index % plantCount] + plant_production_to_order_due[(plant_index + 1) % plantCount] + plant_production_to_order_due[(plant_index + 2) % plantCount];
+//            printf("current productive forces: %d %d %d", plant_production_to_order_due[plant_index % plantCount], plant_production_to_order_due[(plant_index + 1) % plantCount], plant_production_to_order_due[(plant_index + 2) % plantCount]);
             if (current_plant_production < order->quantity) // if all plant unable to afford the order
                 reject_order_count = 3; // move it to reject_order_list (met the following condition directly)
             else {
@@ -304,13 +296,13 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
                     addToTail(&receive_order_list, plant_order_info);
                     addToTail(&plants[(plant_index + 2) % plantCount].orderDate, plant_order_info);
                 }
-                deleteElementFromIndex(order_list, hight_PR_index);
+                delete_begin(order_list);
             }
         }
 
         if (reject_order_count >= plantCount) { // no one plant accept the order, move to reject list
             addToTail(&reject_order_list, order);
-            deleteElementFromIndex(order_list, hight_PR_index);
+            delete_begin(order_list);
             reject_order_count = 0;
         }
         round++;
@@ -321,5 +313,5 @@ void MTSalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
     closeChannel(pc, 1);
     closeChannel(cp, 0);
     printf("\n");
-    writeOutputFile("PR", reject_order_list, receive_order_list, plants, period_day, output_file_name);
+    writeOutputFile("MTS", reject_order_list, receive_order_list, plants, period_day, output_file_name);
 }

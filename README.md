@@ -104,7 +104,7 @@ number] + [algorithm used].
 
 6. `test` // for testing only
 
-### Move The project to PolyU apollo
+### Move this project to PolyU apollo
 
 1. Create required file in polyU apollo
 ```bash

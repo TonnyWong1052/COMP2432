@@ -55,6 +55,8 @@ bool isDateLater(const char *date1, const char *date2) {
 
 void removeNewline(char *str) {
     char *newlinePos;
+    // debug: something input string will auto new line
+    //  "Testing01\n" --> "Testing01\n"
     while ((newlinePos = strchr(str, '\n')) != NULL)
         *newlinePos = '\0';
 }
@@ -71,23 +73,8 @@ int getDaysInMonth(int month, int year) {
     return daysInMonth[month - 1];
 }
 
-void addOneDay(char *date) {    // input 2024-02-29 --> output 2024-03-01
-    int year, month, day;
-    sscanf(date, "%d-%d-%d", &year, &month, &day);
-
-    day++;
-    if (day > getDaysInMonth(month, year)) {
-        day = 1;
-        month++;
-        if (month > 12) {
-            month = 1;
-            year++;
-        }
-    }
-
-    sprintf(date, "%d-%02d-%02d", year, month, day);
-}
-
+// input 2024-02-29, 1 --> output 2024-03-01
+// input 2024-03-01, 1 --> output 2024-03-02
 void addDays(char *date, int daysToAdd, char *outputDate) {
     int year, month, day;
     sscanf(date, "%d-%d-%d", &year, &month, &day);
@@ -103,8 +90,11 @@ void addDays(char *date, int daysToAdd, char *outputDate) {
             }
         }
     }
-
     sprintf(outputDate, "%d-%02d-%02d", year, month, day);
+}
+
+void addOneDay(char *date, char *outputDate){
+    addDays(date, 1, outputDate);
 }
 
 
@@ -151,7 +141,7 @@ bool date_is_valid(const char *buffer) {
     mm = strtol(buffer + 5, NULL, 10);
     dd = strtol(buffer + 8, NULL, 10);
 
-    if (yy >= 1900 && yy <= 9999) {
+    if (yy >= 2000 && yy <= 4000) {
         if (mm >= 1 && mm <= 12) {
             if ((dd >= 1 && dd <= 31) && (mm == 1 || mm == 3 || mm == 5 || mm == 7 ||
                                           mm == 8 || mm == 10 || mm == 12))

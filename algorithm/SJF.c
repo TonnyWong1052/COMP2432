@@ -106,7 +106,7 @@ void SJFchildProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, 
             write(cp[1], plant_new_avab_day, strlen(plant_new_avab_day) + 1);
             write(cp[1], &expected_day_production, sizeof(int));
             write(cp[1], &order->quantity, sizeof(order->quantity));
-            addOneDay(plant_new_avab_day);
+            addOneDay(plant_new_avab_day, plant_new_avab_day);
         }
     }
 
@@ -146,7 +146,7 @@ void SJFalgo(Node **order_list, struct Plant plants[3], char *start_date, char *
 
     Node *reject_order_list = NULL, *receive_order_list = NULL;;
     while (true) {
-        if(plant_index >= plantCount) {    // first plant_index, the remaining day of all plants are both equal 0
+        if(round >= plantCount) {    // first plant_index, the remaining day of all plants are both equal 0
             inform_child_message = 3;   // ask for which plant can process the product fastly
             int remain_time[] = {-1, -1, -1};
             write((pc[0])[1], &inform_child_message, sizeof(inform_child_message));

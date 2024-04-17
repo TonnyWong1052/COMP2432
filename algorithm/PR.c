@@ -129,7 +129,7 @@ void PRchildProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, c
             write(cp[1], plant_new_avab_day, strlen(plant_new_avab_day) + 1);
             write(cp[1], &expected_day_production, sizeof(int));
             write(cp[1], &order->quantity, sizeof(order->quantity));
-            addOneDay(plant_new_avab_day);
+            addOneDay(plant_new_avab_day, plant_new_avab_day);
         }
     }
 

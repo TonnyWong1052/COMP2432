@@ -11,39 +11,19 @@ typedef struct Node {
     struct Node* next;
 } Node;
 
-void appendNode(Node** head, void* data);
-void printList(Node* head);
 void printOrderList(Node* head);
-void addToHead(Node** head, void* data);
 void addToTail(Node** head, void* data);
 void delete_begin(Node** head);
-void delete_end(Node** head);
 int get_size(Node* head);
 void* get_first(Node* head);
-void* get_tail(Node* head);
 void* getElementFromIndex(Node* head, int index);
 void deleteElementFromIndex(Node** head, int index);
-void deleteList(Node** head);
-void clearLinkedList(Node** head);
 
 Node* createNode(void* data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
     return newNode;
-}
-
-void appendNode(Node** head, void* data) {
-    Node* newNode = createNode(data);
-    if (*head == NULL) {
-        *head = newNode;
-    } else {
-        Node* temp = *head;
-        while (temp->next != NULL) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
-    }
 }
 
 void printList(Node* head) {
@@ -67,6 +47,7 @@ int getNumDay(Node* head){
     return count;
 }
 
+// for testing only 
 void printOrderList(Node* head) {
     Node* temp = head;
     printf("\n%-15s %-15s %-15s %-15s\n", "ORDER NUMBER", "Due Date", "Quantity", "Product Name");
@@ -86,12 +67,6 @@ void printOrderList(Node* head) {
     printf("\n");
 }
 
-void addToHead(Node** head, void* data) {
-    Node* newNode = createNode(data);
-    newNode->next = *head;
-    *head = newNode;
-}
-
 void addToTail(Node** head, void* data) {
     Node* newNode = createNode(data);
     newNode->next = NULL;
@@ -103,6 +78,8 @@ void addToTail(Node** head, void* data) {
 
     Node* current = *head;
     while (current->next != NULL) {
+        //        printf("Order Number: %s, Due Date: %s, Quantity: %d, Product Name: %s",
+//               orderNumber, dueDate, quantity, productName);
         current = current->next;
     }
 
@@ -116,25 +93,6 @@ void delete_begin(Node** head) {
     Node* temp = *head;
     *head = (*head)->next;
     free(temp);
-}
-
-void delete_end(Node** head) {
-    if (*head == NULL) {
-        return;
-    }
-    if ((*head)->next == NULL) {
-        free(*head);
-        *head = NULL;
-    } else {
-        Node* temp = *head;
-        Node* prev = NULL;
-        while (temp->next != NULL) {
-            prev = temp;
-            temp = temp->next;
-        }
-        prev->next = NULL;
-        free(temp);
-    }
 }
 
 int get_size(Node* head) {
@@ -152,17 +110,6 @@ void* get_first(Node* head) {
         return NULL;
     }
     return head->data;
-}
-
-void* get_tail(Node* head) {
-    if (head == NULL) {
-        return NULL;
-    }
-    Node* temp = head;
-    while (temp->next != NULL) {
-        temp = temp->next;
-    }
-    return temp->data;
 }
 
 void* getElementFromIndex(Node* head, int index) {
@@ -196,7 +143,8 @@ void deleteElementFromIndex(Node** head, int index) {
         return;
     }
 
-    for (int i = 0; temp != NULL && i < index - 1; i++) {
+    int i;
+    for (i = 0; temp != NULL && i < index - 1; i++) {
         temp = temp->next;
     }
 
@@ -209,32 +157,6 @@ void deleteElementFromIndex(Node** head, int index) {
     free(temp->next);
 
     temp->next = next;
-}
-
-void freeList(Node** head) {
-    Node* current = *head;
-    Node* next = NULL;
-
-    while (current != NULL) {
-        next = current->next;
-        free(current->data);
-        free(current);
-        current = next;
-    }
-
-    *head = NULL;
-}
-
-void clearLinkedList(Node** head) {
-    Node* current = *head;
-    Node* next = NULL;
-
-    while (current != NULL) {
-        next = current->next;
-        free(current);
-        current = next;
-    }
-    *head = NULL;
 }
 
 
