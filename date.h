@@ -8,6 +8,7 @@
 #ifndef DATE_H
 #define DATE_H
 
+
 int calculate_productive_day(int qty, int plantProductiveForces) {
     //  int expected_day_production = (order->quantity + plantProductiveForces / 2) / plantProductiveForces;
     int expected_day_production = 0;

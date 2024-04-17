@@ -91,6 +91,7 @@ void addBATCH(char input_command[100], Node **order_list) {
     // addBATCH test_data_G50_FCFS.dat --> correct
     // addBATCH NOT_EXIST_FOUND.dat --> ERROR 202
     // addBATCH test_data_G50_FCFS.dat ERROR --> ERROR 201
+    // addBATCH incorrect_batch.dat --> ERROR 203
 
 
     if (additionalFormat != 0) {  // command format
@@ -104,11 +105,14 @@ void addBATCH(char input_command[100], Node **order_list) {
         return;
     }
 
+    // addBATCH incorrect_batch.dat
     char line[100];
     while (fgets(line, sizeof(line), file) != NULL) {
-        addORDER(line, order_list);
-//        else if(strcmp(command, "addPERIOD") == 0)
-//            addPERIOD(line, order_list);
+        removeNewline(line);
+        char temp[100];
+        strcpy(temp, line);
+        if(!addORDER(line, order_list))
+            printf("Error 203 : batch File inside command format is not correct: '%s'\n", temp);
     }
     fclose(file);
 }
@@ -128,41 +132,44 @@ void runPLS(char input_command[100], Node **order_list, char start_date[11], cha
     // Input exception handle
     // test case: 'runPLS FCFS | printREPORT > ', 'runPLS FCFS Z printREPORT > report_01_FCFS.txt',
     // 'runPLS FCFS | printREPORT ? report_01_FCFS.txt', 'runPLS FCFS Z printEXcel > report_01_FCFS.txt'
+    // 'runPLS FCFS | printREPORT ERROR report_01_FCFS.txt'  --> Error 401
+    // PERIOD time is null  --> Error 402 // order list is null  --> Error 403
+    // input algorithm is not exist --> Error 404
 
     if (algorithm == NULL || pipeOperator == NULL || printREPORT == NULL || greaterSign == NULL ||
         outputReport == NULL || strcmp(outputReport, "\n") == 0) {
-        printf("Error 400 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
+        printf("Error 401 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
         return;
     } else if (strcmp(pipeOperator, "|") != 0) { //  if pipeOperator != "|"
         printf("Error 401 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
         return;
     } else if (strcmp(printREPORT, "printREPORT") != 0) { //  if printREPORT != "printREPORT"
-        printf("Error 402 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
+        printf("Error 401 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
         return;
     } else if (strcmp(greaterSign, ">") != 0) { //  if greaterSign != ">"
-        printf("Error 403 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
+        printf("Error 401 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
         return;
     } else if (additionalFormat != 0) {  // command format
-        printf("Error 404 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
+        printf("Error 401 : Your command format is invalid : Correct format 'runPLS [Algorithm] | printREPORT > [Report file name]'\n");
         return;
     } else if (strcmp(start_date, "") == 0 || strcmp(end_date, "") == 0) {   // check period date is exist
-        printf("Error 405: Please set period date : Recommend command 'addPERIOD [start date] [end date]'\n");
+        printf("Error 402: Please set period date : Recommend command 'addPERIOD [start date] [end date]'\n");
         return;
     } else if (get_size(*order_list) == 0) {    // check enough order
-        printf("Error 406: order list is null, please add order to the list : Recommend command 'addORDER [Order Number] [Due Date] [Quantity] [Product Name]'\n");
+        printf("Error 403: order list is null, please add order to the list : Recommend command 'addORDER [Order Number] [Due Date] [Quantity] [Product Name]'\n");
         return;
     }
 
     if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
-        FCFSalgo(order_list, plants, start_date, end_date, outputReport);
+        FCFS(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "PR") == 0)
-        PRSalgo(order_list, plants, start_date, end_date, outputReport);
+        PR(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "SJF") == 0)
-        SJFalgo(order_list, plants, start_date, end_date, outputReport);
+        SJF(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "MTS") == 0)
-        MTSalgo(order_list, plants, start_date, end_date, outputReport);
+        MTS(order_list, plants, start_date, end_date, outputReport);
     else
-        printf("Error 407: Input '%s' algorithm not existing\n", algorithm);
+        printf("Error 404: Input '%s' algorithm not existing\n", algorithm);
 //    order_list = malloc(sizeof(struct Order));
 }
 

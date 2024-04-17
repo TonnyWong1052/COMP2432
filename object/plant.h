@@ -11,9 +11,8 @@ struct Plant {
     int id;
     char name[50];
     int productiveForces;
-    Node *myOrder;      // record all order, the plant obtained
-    Node *orderDate;    //record the schedule of the order
-
+    Node *myOrder;      // record all received order by the plant
+    Node *orderDate;    // record the order scheduling in order to print report
 };
 
 void setPlantAttributes(struct Plant* plant, int id, const char* name, int productiveForces) {

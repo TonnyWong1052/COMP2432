@@ -4,7 +4,8 @@
 #ifndef RECEIVE_ORDER_H
 #define RECEIVE_ORDER_H
 
-struct receive_order_info {  // object for print analysis report only
+// the object for recoding the data detail in order to print analysis report
+struct receive_order_info {
     char orderNumber[10];
     char startDate[11];
     char dueDate[11];

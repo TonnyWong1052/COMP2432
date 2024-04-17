@@ -2,21 +2,21 @@
 
 ***PLS Schedule Analysis Report***
 
-Algorithm used: MTS
+Algorithm used: PR
 
 There are 9 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
-P0001           2024-03-01      2024-03-05      5        1500       Plant_X        
-P0002           2024-03-06      2024-03-07      2        500        Plant_X        
+P0006           2024-03-01      2024-03-02      2        600        Plant_X        
 P0003           2024-03-01      2024-03-02      2        700        Plant_Y        
-P0004           2024-03-01      2024-03-03      3        1200       Plant_Z        
-P0005           2024-03-03      2024-03-05      3        1000       Plant_Y        
-P0006           2024-03-04      2024-03-05      2        600        Plant_Z        
-P0007           2024-03-06      2024-03-08      3        900        Plant_Y        
-P0008           2024-03-06      2024-03-08      3        1100       Plant_Z        
-P0009           2024-03-08      2024-03-10      3        800        Plant_X        
+P0002           2024-03-01      2024-03-01      1        500        Plant_Z        
+P0004           2024-03-02      2024-03-04      3        1200       Plant_Z        
+P0005           2024-03-03      2024-03-06      4        1000       Plant_X        
+P0008           2024-03-03      2024-03-05      3        1100       Plant_Y        
+P0007           2024-03-05      2024-03-06      2        900        Plant_Z        
+P0001           2024-03-06      2024-03-09      4        1500       Plant_Y        
+P0009           2024-03-07      2024-03-09      3        800        Plant_X        
 
                   - End -
 
@@ -34,19 +34,19 @@ ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                     10 day
-            Number of products produced:             2800 (in total)
-            Utilization of the plant:                62.2 %
+            Number of days in use:                      9 day
+            Number of products produced:             2400 (in total)
+            Utilization of the plant:                26.7 %
 
 Plant_Y:
-            Number of days in use:                      8 day
-            Number of products produced:             2600 (in total)
-            Utilization of the plant:                43.3 %
+            Number of days in use:                      9 day
+            Number of products produced:             3300 (in total)
+            Utilization of the plant:                27.5 %
 
 Plant_Z:
-            Number of days in use:                      8 day
-            Number of products produced:             2900 (in total)
-            Utilization of the plant:                38.7 %
+            Number of days in use:                      6 day
+            Number of products produced:             2600 (in total)
+            Utilization of the plant:                17.3 %
 
-Overall of utilization:                              48.1 %
+Overall of utilization:                              23.8 %
 
