@@ -55,16 +55,6 @@ Details on user manual preparation, environment setup, file checklist, program c
     - `algorithm`
     - `object`
 
-### Compiling the Program
-
-```bash
-gcc PLS_G50.c -o PLS_G50
-```
-
-```bash
-./PLS_G50
-```
-
 ### Command guide
 
 1. `addPEIOD 2024-06-01 2024-06-30`
@@ -127,4 +117,14 @@ scp /Your_file_path/COMP2432_project/object/* You_PolyU_ID_here@csdoor.comp.poly
 scp /Your_file_path/COMP2432_project/algorithm/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/23030897d/COMP2432_project/algorithm/
 
 scp /Your_file_path/COMP2432_project/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/23030897d/COMP2432_project/
+```
+
+### Compile the Program
+
+```bash
+gcc PLS_G50.c -o PLS_G50
+```
+
+```bash
+./PLS_G50
 ```
