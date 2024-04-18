@@ -4,30 +4,33 @@
 
 Algorithm used: SJF
 
-There are 11 Orders ACCEPTED. Details are as follows:
+There are 12 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
-P0011           2024-04-01      2024-04-01      1        300        Plant_X        
-P0014           2024-04-01      2024-04-02      2        500        Plant_Y        
-P0012           2024-04-01      2024-04-02      2        800        Plant_Z        
-P0015           2024-04-02      2024-04-04      3        900        Plant_X        
-P0016           2024-04-03      2024-04-05      3        1100       Plant_Y        
-P0013           2024-04-03      2024-04-05      3        1200       Plant_Z        
-P0017           2024-04-05      2024-04-08      4        1200       Plant_X        
-P0018           2024-04-06      2024-04-09      4        1300       Plant_Y        
-P0019           2024-04-06      2024-04-08      3        1400       Plant_Z        
-P0020           2024-04-01      2024-04-03      3        900        Plant_X        
-P0020           2024-04-01      2024-04-02      2        600        Plant_Y        
+P0004           2024-06-01      2024-06-02      2        500        Plant_X        
+P0001           2024-06-01      2024-06-02      2        700        Plant_Y        
+P0008           2024-06-01      2024-06-02      2        700        Plant_Z        
+P0005           2024-06-03      2024-06-05      3        800        Plant_X        
+P0006           2024-06-03      2024-06-04      2        800        Plant_Y        
+P0007           2024-06-03      2024-06-04      2        800        Plant_Z        
+P0003           2024-06-05      2024-06-07      3        1000       Plant_Y        
+P0010           2024-06-05      2024-06-06      2        1000       Plant_Z        
+P0002           2024-06-06      2024-06-10      5        1500       Plant_X        
+P0009           2024-06-07      2024-06-10      4        1900       Plant_Z        
+P0014           2024-06-01      2024-06-04      4        1600       Plant_Y        
+P0014           2024-06-01      2024-06-01      1        300        Plant_Z        
 
                   - End -
 
 =================================================================================
 
-There are 0 Orders REJECTED. Details are as follows:
+There are 2 Orders REJECTED. Details are as follows:
 
 ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY 
 =================================================================================
+P0012           Product_F       2023-06-12      1000     
+P0013           Product_E       2023-06-12      1500     
 
                   - End -
 
@@ -36,19 +39,19 @@ ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                     11 day
-            Number of products produced:             3300 (in total)
-            Utilization of the plant:               100.0 %
+            Number of days in use:                     10 day
+            Number of products produced:             2800 (in total)
+            Utilization of the plant:                84.8 %
 
 Plant_Y:
             Number of days in use:                     11 day
-            Number of products produced:             3500 (in total)
-            Utilization of the plant:                79.5 %
+            Number of products produced:             4100 (in total)
+            Utilization of the plant:                93.2 %
 
 Plant_Z:
-            Number of days in use:                      8 day
-            Number of products produced:             3400 (in total)
-            Utilization of the plant:                61.8 %
+            Number of days in use:                     11 day
+            Number of products produced:             4700 (in total)
+            Utilization of the plant:                85.5 %
 
-Overall of utilization:                              80.5 %
+Overall of utilization:                              87.8 %
 

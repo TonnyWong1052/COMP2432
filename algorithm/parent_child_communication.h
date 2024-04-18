@@ -136,14 +136,15 @@ int determineFastestPlant(int *pc[2], int *cp[2], int plantCount) {
     int current_round_plant;
 
     // Ask each child process for its remaining time
-    for (int i = 0; i < plantCount; i++) {
+    int i;
+    for (i = 0; i < plantCount; i++) {
         write(pc[i][1], &inform_child_message, sizeof(inform_child_message));
         read(cp[i][0], &remain_time[i], sizeof(remain_time[i]));
     }
 
     // Determine which plant can process the fastest (has the most remaining time)
     current_round_plant = 0;
-    for (int i = 1; i < plantCount; i++) {
+    for (i = 1; i < plantCount; i++) {
         if (remain_time[current_round_plant] < remain_time[i]) {
             current_round_plant = i;
         }
@@ -156,7 +157,8 @@ void shutdownChildProcesses(int *pc[2], int *cp[2], int plantCount) {
     int completedReport;
     int inform_child_message = 0;  // Message to child, no more orders are coming
 
-    for (int i = 0; i < plantCount; i++) {
+    int i;
+    for (i = 0; i < plantCount; i++) {
         write(pc[i][1], &inform_child_message, sizeof(inform_child_message));
         read(cp[i][0], &completedReport, sizeof(completedReport));
     }

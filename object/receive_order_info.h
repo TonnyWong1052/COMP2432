@@ -1,4 +1,3 @@
-#include <string.h>
 #include "../date.h"
 
 #ifndef RECEIVE_ORDER_H

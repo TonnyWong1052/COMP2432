@@ -3,9 +3,6 @@
 #include "date.h"
 #include "command.c"
 #include "LinkedList.h"
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 int main() {
     struct Plant plants[3];
@@ -25,12 +22,12 @@ int main() {
 
         if (strncmp(input_command, "test", 4) == 0) {   // for testing only !!!
 //            FCFS algo
-//            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
-//            addPERIOD(input_command, &start_date, &end_date);
-//            strcpy(input_command, "addBATCH test_data_G50_FCFS.dat");
-//            addBATCH(input_command, &order_list);
-//            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
-//            runPLS(input_command, &order_list, start_date, end_date, plants);
+            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
+            addPERIOD(input_command, &start_date, &end_date);
+            strcpy(input_command, "addBATCH test_data_G50_FCFS.dat");
+            addBATCH(input_command, &order_list);
+            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
+            runPLS(input_command, &order_list, start_date, end_date, plants);
 //            PR algo
 //            strcpy(input_command, "addPERIOD 2024-05-01 2024-05-20");
 //            addPERIOD(input_command, &start_date, &end_date);
@@ -46,12 +43,12 @@ int main() {
 //            strcpy(input_command, "runPLS SJF | printREPORT > report_03_SJF.txt");
 //            runPLS(input_command, &order_list, start_date, end_date, plants);
 //            MTS algo
-            strcpy(input_command, "addPERIOD 2024-03-01 2024-03-06");
-            addPERIOD(input_command, &start_date, &end_date);
-            strcpy(input_command, "addBATCH test_data_G50_MTS.dat");
-            addBATCH(input_command, &order_list);
-            strcpy(input_command, "runPLS MTS | printREPORT > PLS_Report_G50_MTS.txt");
-            runPLS(input_command, &order_list, start_date, end_date, plants);
+//            strcpy(input_command, "addPERIOD 2024-03-01 2024-03-06");
+//            addPERIOD(input_command, &start_date, &end_date);
+//            strcpy(input_command, "addBATCH test_data_G50_MTS.dat");
+//            addBATCH(input_command, &order_list);
+//            strcpy(input_command, "runPLS MTS | printREPORT > PLS_Report_G50_MTS.txt");
+//            runPLS(input_command, &order_list, start_date, end_date, plants);
         } else if (strncmp(input_command, "addPERIOD", 9) == 0) {
             addPERIOD(input_command, &start_date, &end_date); // addPERIOD 2024-06-01 2024-06-30
         } else if (strncmp(input_command, "addORDER", 8) == 0) {
