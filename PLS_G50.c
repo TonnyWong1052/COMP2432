@@ -46,7 +46,7 @@ int main() {
 //            strcpy(input_command, "runPLS SJF | printREPORT > report_03_SJF.txt");
 //            runPLS(input_command, &order_list, start_date, end_date, plants);
 //            MTS algo
-            strcpy(input_command, "addPERIOD 2024-03-01 2024-03-30");
+            strcpy(input_command, "addPERIOD 2024-03-01 2024-03-06");
             addPERIOD(input_command, &start_date, &end_date);
             strcpy(input_command, "addBATCH test_data_G50_MTS.dat");
             addBATCH(input_command, &order_list);

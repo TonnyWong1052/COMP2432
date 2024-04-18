@@ -15,6 +15,6 @@ addBATCH test_data_G50_SJF.dat
 runPLS SJF | printREPORT > PLS_Report_G50_SJF.txt
 
 //MIS algo
-addPERIOD 2024-03-01 2024-03-15
+addPERIOD 2024-03-01 2024-03-06
 addBATCH test_data_G50_MTS.dat
 runPLS MTS | printREPORT > PLS_Report_G50_MTS.txt

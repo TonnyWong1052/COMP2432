@@ -4,6 +4,11 @@
 
 The Steel-making Production Line Scheduler (PLS) aims to assist a medium-sized steel-making manufacturer in optimizing three production plants
 
+## Group Member
+- Chiu Tsz Ching 22088546D
+- Luo Yuehan 20069609D
+- Leung Chu Shing 23030897D
+
 ## Project Scope
 
 - Process Management
@@ -17,6 +22,7 @@ The project utilizes scheduling algorithms like:
 - First Come First Serve (FCFS)
 - Priority (PR)
 - Shortest Job First (SJF)
+- Maximum Throughput Scheduling (MIS)
 
 ## Software Structures
 

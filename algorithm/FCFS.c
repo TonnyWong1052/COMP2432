@@ -34,7 +34,6 @@ void FCFS(Node **order_list, struct Plant plants[3], char *start_date, char *end
     while (true) {
         // seeking the plant which have maximum remaining day
         plant_index = determineFastestPlant(pc, cp, plantCount);
-
         if (get_size(*order_list) == 0){    // seek does order list have any order
             shutdownChildProcesses(pc, cp, plantCount);
             break;
@@ -52,12 +51,13 @@ void FCFS(Node **order_list, struct Plant plants[3], char *start_date, char *end
         if (is_receive_order == 1) {
             // Inside the loop or the conditional block where you handle the accepted order
             processAcceptedOrder(pc, cp, order_list, plants, plant_index, &receive_order_list, plantCount, 0);
+            reject_order_count = 0;
         } else if (is_receive_order == -1) { // if order due date not match date, let's find other plant
             reject_order_count++;   //  the order has been rejected by the plant
         } else if (is_receive_order == 0) {
             // Due to plant do not have enough productive forces
             // the parent would ask for all child status and evenly place this order to plants (like send product_a to plant_X and plant_Y)
-            evaluateAndDistributeOrders(pc, cp, plants, order, order_list, &reject_order_list, &receive_order_list,
+            reject_order_count = evaluateAndDistributeOrders(pc, cp, plants, order, order_list, &reject_order_list, &receive_order_list,
                                         start_date, plant_index, reject_order_count, plantCount, 0);
         }
 

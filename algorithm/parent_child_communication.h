@@ -37,10 +37,8 @@ void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, cha
         } else if (parent_info_message == 2) {  // parent directly insert order to child without any response to parent
             // directly insert the order to order list of plant
             read(pc[0], order, sizeof(struct Order));
-            char temp_date[11];
-            strcpy(temp_date, plant_new_avab_day);
             expected_day_production = calculate_productive_day(order->quantity, plant->productiveForces);
-            addDays(plant_new_avab_day, expected_day_production, temp_date);
+            addDays(plant_new_avab_day, expected_day_production, plant_new_avab_day);
             remainAvabiliableDay -= expected_day_production;
             addToTail(&plant->myOrder, order);
             int qty = order->quantity, current_day_qty;
@@ -61,6 +59,7 @@ void childProcess(int pc[2], int cp[2], struct Plant *plant, int period_day, cha
         } else if (parent_info_message == 4) {
             write(cp[1], &plant->productiveForces, sizeof(plant->productiveForces));
             write(cp[1], &remainAvabiliableDay, sizeof(remainAvabiliableDay));
+            write(cp[1], plant_new_avab_day, strlen(plant_new_avab_day) + 1);
             continue;
         }
         // special process by parent end
@@ -165,7 +164,7 @@ void shutdownChildProcesses(int *pc[2], int *cp[2], int plantCount) {
 
 
 
-void evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], struct Order *order, Node **order_list,
+int evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], struct Order *order, Node **order_list,
                                  Node **reject_order_list, Node **receive_order_list, char *start_date, int plant_index,
                                  int reject_order_count, int plantCount, int order_index) {
     int inform_child_message = -1;  // -1 is ask for child their status
@@ -210,7 +209,8 @@ void evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], 
                                    plant_production_to_order_due[(plant_index + 2) % plantCount];
 //            printf("current productive forces: %d %d %d", plant_production_to_order_due[plant_index % plantCount], plant_production_to_order_due[(plant_index + 1) % plantCount], plant_production_to_order_due[(plant_index + 2) % plantCount]);
     if (current_plant_production < order->quantity) { // if all plant unable to afford the order
-        reject_order_count = 3; // move it to reject_order_list (met the following condition directly)
+//        set reject_order_count = 3; // move it to reject_order_list (met the following condition directly)
+        return 3;
     } else {
         // evenly place this order to plant_X, plant_Y, and plant_Z
         int remain_qty = order->quantity;
@@ -268,6 +268,7 @@ void evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], 
             addToTail(&plants[(plant_index + 2) % plantCount].orderDate, plant_order_info);
         }
         deleteElementFromIndex(order_list, order_index);
+        return 0;
     }
 }
 
