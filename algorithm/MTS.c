@@ -12,6 +12,29 @@
 // plant_X, plant_Y, plant_Z
 #define plantCount 3
 
+int findMaxRemainingDayPlant(int plant_remaining_productiveForces[plantCount][3]){
+    int y, max_remain_day_plant_index = 0, max_remain_day = plant_remaining_productiveForces[0][1];
+    for(y=0;y<plantCount;y++){
+        if(plant_remaining_productiveForces[y][1] > max_remain_day)
+            max_remain_day = plant_remaining_productiveForces[y][1], max_remain_day_plant_index =  y;
+    }
+    return max_remain_day_plant_index;
+}
+
+bool checkPlantPriorityValue(int x, int y, int z, int max_remain_day_index, int send_order_to_plant[plantCount]){
+    if(max_remain_day_index==0) {
+        if (x >= send_order_to_plant[0])
+            return true;
+    }else if(max_remain_day_index==1) {
+        if (y >= send_order_to_plant[1])
+            return true;
+    } else if(max_remain_day_index==2) {
+        if (y >= send_order_to_plant[2])
+            return true;
+    }
+    return false;
+}
+
 void MTS(Node **order_list, struct Plant plants[3], char *start_date, char *end_date, char *output_file_name) {
     int pcX[2], pcY[2], pcZ[2];
     int cpX[2], cpY[2], cpZ[2];
@@ -27,7 +50,7 @@ void MTS(Node **order_list, struct Plant plants[3], char *start_date, char *end_
 
     closeChannel(pc, 0);    // close all pipe channel with their index
     closeChannel(cp, 1);
-    int plant_index, reject_order_count = 0, round = 0;
+    int reject_order_count = 0, round = 0;
     int inform_child_message, order_index;
     Node *reject_order_list = NULL, *receive_order_list = NULL;
 
@@ -51,52 +74,60 @@ void MTS(Node **order_list, struct Plant plants[3], char *start_date, char *end_
         for (x = 0; x < plantCount; x++) {
             inform_child_message = 4;
             write((pc[x])[1], &inform_child_message, sizeof(inform_child_message));
-            read((cp[x])[0], &plant_remaining_productiveForces[x][0], sizeof(plant_remaining_productiveForces[x][0]));
-            read((cp[x])[0], &plant_remaining_productiveForces[x][1], sizeof(plant_remaining_productiveForces[x][1]));
+            read((cp[x])[0], &plant_remaining_productiveForces[x][0],
+                 sizeof(plant_remaining_productiveForces[x][0]));  // get plant productive forces
+            read((cp[x])[0], &plant_remaining_productiveForces[x][1],
+                 sizeof(plant_remaining_productiveForces[x][1]));  //  set remaining available day of plant
+            plant_remaining_productiveForces[x][2] =
+                    plant_remaining_productiveForces[x][1] * plant_remaining_productiveForces[x][0];
         }
         struct Order *order = getElementFromIndex(*order_list, order_index);
 
+//        printf("Current order count: %d %d", get_size(*order_list), order->quantity);
+//        printf(" print data %d %d %d \n", plant_remaining_productiveForces[0][1], plant_remaining_productiveForces[1][1], plant_remaining_productiveForces[2][1]);
+        int send_order_to_plant[] = {0, 0, 0};
+//        printf("test %d %d %d", plant_remaining_productiveForces[0][2], plant_remaining_productiveForces[1][2], plant_remaining_productiveForces[2][2]);
         int total = order->quantity;
         int y, z;
-        for (x = 0; x <= total / 300 && x <= plant_remaining_productiveForces[0][0]; x++) {
-            for (y = 0; y <= total / 400 && y <= plant_remaining_productiveForces[0][1]; y++) {
-                for (z = 0; z <= total / 500 && z <= plant_remaining_productiveForces[0][2]; z++) {
+        for (x = 0; x <= total / 300 && x <= plant_remaining_productiveForces[0][1]; x++) {
+            for (y = 0; y <= total / 400 && y <= plant_remaining_productiveForces[1][1]; y++) {
+                for (z = 0; z <= total / 500 && z <= plant_remaining_productiveForces[2][1]; z++) {
                     int l = total - (300 * x + 400 * y + 500 * z);
-                    if (l >= 0) {
-                        printf("(%d, %d, %d, %d)\n", x, y, z, l);
+                    // plant priority: detect which have maximum remaining day
+                    if (l == 0 && checkPlantPriorityValue(x,y,z, findMaxRemainingDayPlant(plant_remaining_productiveForces),send_order_to_plant)) {
+//                        printf("Spec (%d, %d, %d, %d)\n", x, y, z, l);
+                        send_order_to_plant[0] = x;
+                        send_order_to_plant[1] = y;
+                        send_order_to_plant[2] = z;
                     }
                 }
             }
         }
+//        printf("data here %d %d %d \n", send_order_to_plant[0], send_order_to_plant[1], send_order_to_plant[2]);
 
-        plant_index = determineFastestPlant(pc, cp, plantCount);
-
-        inform_child_message = 1;
-        // Send the order to plant (child process)
-        write((pc[plant_index % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
-        // Send the order to plant (child process)
-        write((pc[plant_index % plantCount])[1], order, sizeof(struct Order));
-
-        int is_receive_order;
-        read((cp[plant_index % plantCount])[0], &is_receive_order, sizeof(is_receive_order));
-        // receive message from child:
-        // is_receive_order = 1 : receive the order . if equal 0 : not enough Productive Forces . if equal -1 : order due date not match date
-        if (is_receive_order == 1) {
-            processAcceptedOrder(pc, cp, order_list, plants, plant_index, &receive_order_list, plantCount, order_index);
-        } else if (is_receive_order == -1) { // if order due date not match date, let's find other plant
-            reject_order_count++;   //  the order has been rejected by the plant
-        } else if (is_receive_order == 0) {
-            // Due to plant do not have enough productive forces
-            // the parent would ask for all child status and evenly place this order to plants (like send product_a to plant_X and plant_Y)
+        if (send_order_to_plant[0] + send_order_to_plant[1] + send_order_to_plant[2] != 0) {
+            // insert order to plant
+            inform_child_message = 2;
+            for (x = 0; x < plantCount; x++) {
+                int order_qty = send_order_to_plant[x] * plant_remaining_productiveForces[x][0];
+                if(order_qty!=0) {
+//                    printf("Insert order %s with %d to %s\n", order->orderNumber, order_qty, plants[x].name);
+                    order->quantity = order_qty;
+                    write((pc[x])[1], &inform_child_message, sizeof(inform_child_message));
+                    write((pc[x])[1], order, sizeof(struct Order));
+                }
+            }
+//            printf("\n");
+            deleteElementFromIndex(order_list, order_index);
+        } else {
+//            printf("Auto-arrange order %s\n", order->orderNumber);
+            int plant_index = 0;
+            for (x = 0; x < plantCount; x++) {
+                if (plant_remaining_productiveForces[x][1] > plant_remaining_productiveForces[plant_index][1])
+                    plant_index = x;
+            }
             evaluateAndDistributeOrders(pc, cp, plants, order, order_list, &reject_order_list, &receive_order_list,
                                         start_date, plant_index, reject_order_count, plantCount, order_index);
-
-        }
-
-        if (reject_order_count >= plantCount) { // no one plant accept the order, move to reject list
-            addToTail(&reject_order_list, order);
-            deleteElementFromIndex(order_list, order_index);
-            reject_order_count = 0;
         }
         round++;
     }
