@@ -25,13 +25,14 @@ The project utilizes scheduling algorithms like:
 - Maximum Throughput Scheduling (MIS) [*Highest utilization]
 
 ## Maximum Throughput Scheduling
+Suppose the order is prepared to be arranged. Given a total order quantity Q, the order allocation of three plants can be expressed like below:
 
 $$
 500x + 400y + 300z + l = Q
 $$
 
-- \( x \), \( y \), \( z \) represent the number of work that processed at plants X, Y, and Z.
-- \( l \) represents the leftover quantity that cannot perfectly solve the problem if value more than 0 (if equal zero, it would consider another order combination method).
+- x, y, z represent the number of work that processed at plants X, Y, and Z.
+- l represents the leftover quantity that cannot perfectly solve the problem if value more than 0 (if equal zero, it would consider another order combination method).
 - item The plant with the maximum remaining days (Remaining productive forces of the plant) should be considered
 
 
