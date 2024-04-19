@@ -24,21 +24,22 @@ The project utilizes scheduling algorithms like:
 - Shortest Job First (SJF)
 - Maximum Throughput Scheduling (MIS) [*Highest utilization]
 
-$$
-500x + 400y + 300z + l = Q
-$$
-
 ## Software Structures
+
+Acts as the parent process and coordinates the overall functioning of the application. It is responsible for collecting order details, processing user inputs, input exception handles, and managing interprocess communication through pipes.
+
 ### Input Module
 
-Acts as the parent process and coordinates the overall functioning of the application. It is responsible for collecting order details, processing user inputs, mapping commands to corresponding functions.
+Acts as the parent process and coordinates the overall functioning of the application. It is responsible for collecting order details, processing user inputs, mapping commands to corresponding functions, and managing interprocess communication through pipes.
 
 ### Scheduling Module
 
-This module, running as a child process created by output module, receives data from the Input Module and applies scheduling algorithms to generate production schedules. It sends back the scheduling results to the parent process. It outputs detailed schedules and analysis report for review.
+This module, running as a child process, receives data from the Input Module and applies scheduling algorithms to generate production schedules. It sends back the scheduling results to the parent process.
+
 ### Output Module
 
-Another child process that receives scheduling data from the parent process and formats it for presentation. It is responsible for collecting order details, input exception handles.
+Another child process that receives scheduling data from the parent process and formats it for presentation. It outputs detailed schedules and analysis for the factory manager's review.
+
 ## Performance Analysis
 
 Details on user manual preparation, environment setup, file checklist, program compilation and execution, and error handling.
@@ -96,9 +97,8 @@ number] + [algorithm used].
 
 [exitPLS] is to terminate the program.
 
-6. `test` // for testing only
-
 ### Move this project to PolyU apollo
+You can follow the command like below
 
 1. Create required file in polyU apollo
 ```bash
@@ -109,6 +109,7 @@ mkdir algorithm
 ```
 
 2. SCP to move file to apollo
+
 ```bash
 scp /Your_file_path/COMP2432_project/object/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/23030897d/COMP2432_project/object/
 
@@ -118,11 +119,14 @@ scp /Your_file_path/COMP2432_project/* You_PolyU_ID_here@csdoor.comp.polyu.edu.h
 ```
 
 ### Compile the Program
+You can follow the command like below
 
+1.
 ```bash
 gcc PLS_G50.c -o PLS_G50
 ```
 
+2.
 ```bash
 ./PLS_G50
 ```
