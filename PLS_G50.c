@@ -10,7 +10,7 @@ int response_message = 1;
 void run_command(char input_command[100], char (*start_date)[11], char (*end_date)[11], Node **order_list, struct Plant plants[]) {
     int child_id = fork();
     if (child_id == 0) {
-        if (strncmp(input_command, "test", 4) == 0) {
+        if (strncmp(input_command, "test", 4) == 0) {   // for developer testing only
             strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
             addPERIOD(input_command, start_date, end_date);
             strcpy(input_command, "addBATCH test_data_G50_FCFS.dat");
@@ -38,7 +38,7 @@ void run_command(char input_command[100], char (*start_date)[11], char (*end_dat
         }
         write(cp[1], &response_message, sizeof(response_message));
     }
-    // if read
+    // if read exit_message is True, exit the system
     int exit_message;
     read(cp[0], &exit_message, sizeof(exit_message));
     if(exit_message == -1)

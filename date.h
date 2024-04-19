@@ -8,7 +8,6 @@
 #ifndef DATE_H
 #define DATE_H
 
-
 int calculate_productive_day(int qty, int plantProductiveForces) {
     //  int expected_day_production = (order->quantity + plantProductiveForces / 2) / plantProductiveForces;
     int expected_day_production = 0;
@@ -40,16 +39,13 @@ void closeChannel(int *channel[3], int index) {
 bool isDateLater(const char *date1, const char *date2) {
     struct tm tm1, tm2;
     time_t t1, t2;
-
     memset(&tm1, 0, sizeof(struct tm));
     memset(&tm2, 0, sizeof(struct tm));
-
     strptime(date1, "%Y-%m-%d", &tm1);
     strptime(date2, "%Y-%m-%d", &tm2);
-
     t1 = mktime(&tm1);
     t2 = mktime(&tm2);
-
+    // time library compare two date
     return difftime(t1, t2) > 0;
 }
 
@@ -120,6 +116,7 @@ bool date_is_valid(const char *buffer) {
 
     const int len = strlen(buffer);
 
+    // eg 2022-11-22 : the length of date is 10
     if (len != 10) {
         return false;
     }
@@ -141,7 +138,7 @@ bool date_is_valid(const char *buffer) {
     yy = strtol(buffer, NULL, 10);
     mm = strtol(buffer + 5, NULL, 10);
     dd = strtol(buffer + 8, NULL, 10);
-
+//    printf("data %d %d %d", yy, mm, dd);
     if (yy >= 2000 && yy <= 4000) {
         if (mm >= 1 && mm <= 12) {
             if ((dd >= 1 && dd <= 31) && (mm == 1 || mm == 3 || mm == 5 || mm == 7 ||
