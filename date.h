@@ -58,6 +58,19 @@ void removeNewline(char *str) {
         *newlinePos = '\0';
 }
 
+void removeNewLine_2(char* str) {
+    int len = strlen(str);
+    int i,j;
+    for (i = 0; i < len; i++) {
+        if (str[i] == '\n') {
+            for (j = i; j < len; j++) {
+                str[j] = str[j + 1];
+            }
+        }
+    }
+}
+
+
 int isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }

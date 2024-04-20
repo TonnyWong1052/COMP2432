@@ -4,33 +4,28 @@
 
 Algorithm used: FCFS
 
-There are 12 Orders ACCEPTED. Details are as follows:
+There are 8 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
-P0001           2024-06-01      2024-06-03      3        700        Plant_X        
-P0002           2024-06-01      2024-06-04      4        1500       Plant_Y        
-P0003           2024-06-01      2024-06-02      2        1000       Plant_Z        
-P0004           2024-06-03      2024-06-03      1        500        Plant_Z        
-P0005           2024-06-04      2024-06-06      3        800        Plant_X        
-P0006           2024-06-04      2024-06-05      2        800        Plant_Z        
-P0007           2024-06-05      2024-06-06      2        800        Plant_Y        
-P0008           2024-06-06      2024-06-07      2        700        Plant_Z        
-P0009           2024-06-01      2024-06-05      5        1500       Plant_X        
-P0009           2024-06-01      2024-06-01      1        400        Plant_Y        
-P0010           2024-06-08      2024-06-10      3        1000       Plant_Y        
-P0014           2024-06-08      2024-06-11      4        1900       Plant_Z        
+P0002           2024-03-01      2024-03-02      2        500        Plant_X        
+P0003           2024-03-01      2024-03-02      2        700        Plant_Y        
+P0004           2024-03-01      2024-03-03      3        1200       Plant_Z        
+P0005           2024-03-03      2024-03-06      4        1000       Plant_X        
+P0006           2024-03-03      2024-03-04      2        600        Plant_Y        
+P0007           2024-03-04      2024-03-04      1        300        Plant_Z        
+P0008           2024-03-05      2024-03-06      2        700        Plant_Y        
+P0010           2024-03-05      2024-03-06      2        900        Plant_Z        
 
                   - End -
 
 =================================================================================
 
-There are 2 Orders REJECTED. Details are as follows:
+There are 1 Orders REJECTED. Details are as follows:
 
 ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY 
 =================================================================================
-P0012           Product_F       2023-06-12      1000     
-P0013           Product_E       2023-06-12      1500     
+P0009           Product_H       2024-03-09      1100     
 
                   - End -
 
@@ -39,19 +34,19 @@ P0013           Product_E       2023-06-12      1500
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                     11 day
-            Number of products produced:             3000 (in total)
-            Utilization of the plant:                90.9 %
+            Number of days in use:                      6 day
+            Number of products produced:             1500 (in total)
+            Utilization of the plant:                83.3 %
 
 Plant_Y:
-            Number of days in use:                     10 day
-            Number of products produced:             3700 (in total)
-            Utilization of the plant:                84.1 %
+            Number of days in use:                      6 day
+            Number of products produced:             2000 (in total)
+            Utilization of the plant:                83.3 %
 
 Plant_Z:
-            Number of days in use:                     11 day
-            Number of products produced:             4900 (in total)
-            Utilization of the plant:                89.1 %
+            Number of days in use:                      6 day
+            Number of products produced:             2400 (in total)
+            Utilization of the plant:                80.0 %
 
-Overall of utilization:                              88.0 %
+Overall of utilization:                              82.2 %
 

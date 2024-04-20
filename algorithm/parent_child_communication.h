@@ -183,17 +183,18 @@ int evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], s
     char *temp_start_dates[] = {temp_start_date_first, temp_start_date_second, temp_start_date_thir};
 
     // get value by child process (plant)
-    read((cp[plant_index % plantCount])[0], temp_start_dates[plant_index % plantCount], sizeof(temp_start_date_first));
+    read((cp[plant_index % plantCount])[0], temp_start_dates[0], sizeof(temp_start_date_first));
     read((cp[plant_index % plantCount])[0], &remain_avabiliable_day[plant_index % plantCount],
          sizeof(remain_avabiliable_day[0]));
-    read((cp[(plant_index + 1) % plantCount])[0], temp_start_dates[(plant_index + 1) % plantCount],
+    read((cp[(plant_index + 1) % plantCount])[0], temp_start_dates[1],
          sizeof(temp_start_date_second));
     read((cp[(plant_index + 1) % plantCount])[0], &remain_avabiliable_day[(plant_index + 1) % plantCount],
          sizeof(remain_avabiliable_day[1]));
-    read((cp[(plant_index + 2) % plantCount])[0], temp_start_dates[(plant_index + 2) % plantCount],
+    read((cp[(plant_index + 2) % plantCount])[0], temp_start_dates[2],
          sizeof(temp_start_date_thir));
     read((cp[(plant_index + 2) % plantCount])[0], &remain_avabiliable_day[(plant_index + 2) % plantCount],
          sizeof(remain_avabiliable_day[2]));
+//    printf("print %s %s %s", temp_start_dates[0], );
     // calculate the available production from the available start date of plant to due date of order
 
     plant_production_to_order_due[plant_index % plantCount] =
@@ -219,20 +220,21 @@ int evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], s
         inform_child_message = 2;
         if (plant_production_to_order_due[plant_index % plantCount] > 0) {
             order->quantity = plant_production_to_order_due[plant_index % plantCount];
+            if(order->quantity > 0) {
+                write((pc[plant_index % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+                write((pc[plant_index % plantCount])[1], order, sizeof(struct Order)); //double test
+                remain_qty -= plant_production_to_order_due[plant_index % plantCount];
 
-            write((pc[plant_index % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
-            write((pc[plant_index % plantCount])[1], order, sizeof(struct Order)); //double test
-            remain_qty -= plant_production_to_order_due[plant_index % plantCount];
-
-            // Record the data to list
-            struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
-            setReceiveOrderInfoValuesV2(plant_order_info, order->orderNumber, start_date);
-            int order_period = calculate_productive_day(order->quantity,
-                                                        plants[plant_index % plantCount].productiveForces);
-            setReceiveOrderInfoValuesV3(plant_order_info, order_period, order->quantity,
-                                        plants[plant_index % plantCount].name);
-            addToTail(receive_order_list, plant_order_info);
-            addToTail(&plants[plant_index % plantCount].orderDate, plant_order_info);
+                // Record the data to list
+                struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
+                setReceiveOrderInfoValuesV2(plant_order_info, order->orderNumber, temp_start_dates[0]);
+                int order_period = calculate_productive_day(order->quantity,
+                                                            plants[plant_index % plantCount].productiveForces);
+                setReceiveOrderInfoValuesV3(plant_order_info, order_period, order->quantity,
+                                            plants[plant_index % plantCount].name);
+                addToTail(receive_order_list, plant_order_info);
+                addToTail(&plants[plant_index % plantCount].orderDate, plant_order_info);
+            }
         }
 
         if (plant_production_to_order_due[(plant_index + 1) % plantCount] > 0) {
@@ -240,34 +242,38 @@ int evaluateAndDistributeOrders(int *pc[2], int *cp[2], struct Plant plants[], s
                 order->quantity = remain_qty;   // if the plant can handle all remain qty
             else   // if unable handle all remaining qty, as well as possible to process remaining qty
                 order->quantity = plant_production_to_order_due[(plant_index + 1) % plantCount];
+            if(order->quantity > 0) {
+                write((pc[(plant_index + 1) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+                write((pc[(plant_index + 1) % plantCount])[1], order, sizeof(struct Order)); //double test
+                remain_qty -= plant_production_to_order_due[(plant_index + 1) % plantCount];
 
-            write((pc[(plant_index + 1) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
-            write((pc[(plant_index + 1) % plantCount])[1], order, sizeof(struct Order)); //double test
-            remain_qty -= plant_production_to_order_due[(plant_index + 1) % plantCount];
-
-            struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
-            setReceiveOrderInfoValuesV2(plant_order_info, order->orderNumber, start_date);
-            int order_period = calculate_productive_day(order->quantity,
-                                                        plants[(plant_index + 1) % plantCount].productiveForces);
-            setReceiveOrderInfoValuesV3(plant_order_info, order_period, order->quantity,
-                                        plants[(plant_index + 1) % plantCount].name);
-            addToTail(receive_order_list, plant_order_info);
-            addToTail(&plants[(plant_index + 1) % plantCount].orderDate, plant_order_info);
+                struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
+                setReceiveOrderInfoValuesV2(plant_order_info, order->orderNumber, temp_start_dates[1]);
+                int order_period = calculate_productive_day(order->quantity,
+                                                            plants[(plant_index + 1) % plantCount].productiveForces);
+                setReceiveOrderInfoValuesV3(plant_order_info, order_period, order->quantity,
+                                            plants[(plant_index + 1) % plantCount].name);
+//                plant_order_info->startDate = temp_start_date_second;
+                addToTail(receive_order_list, plant_order_info);
+                addToTail(&plants[(plant_index + 1) % plantCount].orderDate, plant_order_info);
+            }
         }
 
         if (remain_qty > 0 && plant_production_to_order_due[(plant_index + 2) % plantCount] > 0) {
             order->quantity = remain_qty;
-            write((pc[(plant_index + 2) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
-            write((pc[(plant_index + 2) % plantCount])[1], order, sizeof(struct Order)); //double test
+            if(order->quantity > 0) {
+                write((pc[(plant_index + 2) % plantCount])[1], &inform_child_message, sizeof(inform_child_message));
+                write((pc[(plant_index + 2) % plantCount])[1], order, sizeof(struct Order)); //double test
 
-            struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
-            setReceiveOrderInfoValuesV2(plant_order_info, order->orderNumber, start_date);
-            int order_period = calculate_productive_day(order->quantity,
-                                                        plants[(plant_index + 2) % plantCount].productiveForces);
-            setReceiveOrderInfoValuesV3(plant_order_info, order_period, order->quantity,
-                                        plants[(plant_index + 2) % plantCount].name);
-            addToTail(receive_order_list, plant_order_info);
-            addToTail(&plants[(plant_index + 2) % plantCount].orderDate, plant_order_info);
+                struct receive_order_info *plant_order_info = malloc(sizeof(struct receive_order_info));
+                setReceiveOrderInfoValuesV2(plant_order_info, order->orderNumber, temp_start_dates[2]);
+                int order_period = calculate_productive_day(order->quantity,
+                                                            plants[(plant_index + 2) % plantCount].productiveForces);
+                setReceiveOrderInfoValuesV3(plant_order_info, order_period, order->quantity,
+                                            plants[(plant_index + 2) % plantCount].name);
+                addToTail(receive_order_list, plant_order_info);
+                addToTail(&plants[(plant_index + 2) % plantCount].orderDate, plant_order_info);
+            }
         }
         deleteElementFromIndex(order_list, order_index);
         return 0;

@@ -22,7 +22,7 @@ The project utilizes scheduling algorithms like:
 - First Come First Serve (FCFS)
 - Priority (PR)
 - Shortest Job First (SJF)
-- Maximum Throughput Scheduling (MIS) [*Highest utilization]
+- Maximum Throughput Scheduling ‹(MIS) [*Highest utilization]
 
 ## Maximum Throughput Scheduling
 Suppose the order is prepared to be arranged. Given a total order quantity Q, the order allocation of three plants can be expressed like below:

@@ -4,22 +4,21 @@
 
 Algorithm used: MTS
 
-There are 12 Orders ACCEPTED. Details are as follows:
+There are 11 Orders ACCEPTED. Details are as follows:
 
 ORDER NUMBER    START           END             DAYS     QUANTITY   PLANT          
 =================================================================================
 P0006           2024-03-01      2024-03-02      2        600        Plant_X        
-P0003           2024-03-03      2024-03-03      1        300        Plant_X        
+P0007           2024-03-03      2024-03-03      1        300        Plant_X        
+P0003           2024-03-04      2024-03-04      1        300        Plant_X        
 P0003           2024-03-01      2024-03-01      1        400        Plant_Y        
 P0002           2024-03-01      2024-03-01      1        500        Plant_Z        
 P0004           2024-03-02      2024-03-04      3        1200       Plant_Y        
 P0005           2024-03-02      2024-03-03      2        1000       Plant_Z        
-P0008           2024-03-04      2024-03-05      2        600        Plant_X        
-P0008           2024-03-04      2024-03-04      1        500        Plant_Z        
-P0007           2024-03-05      2024-03-05      1        400        Plant_Y        
-P0007           2024-03-05      2024-03-05      1        500        Plant_Z        
-P0009           2024-03-06      2024-03-06      1        400        Plant_Y        
-P0009           2024-03-06      2024-03-06      1        500        Plant_Z        
+P0009           2024-03-05      2024-03-06      2        600        Plant_X        
+P0009           2024-03-04      2024-03-04      1        500        Plant_Z        
+P0008           2024-03-05      2024-03-06      2        800        Plant_Y        
+P0010           2024-03-05      2024-03-06      2        1000       Plant_Z        
 
                   - End -
 
@@ -37,9 +36,9 @@ ORDER NUMBER    PRODUCT NAME    Due Date        QUANTITY
 ***PERFORMANCE
 
 Plant_X:
-            Number of days in use:                      5 day
-            Number of products produced:             1500 (in total)
-            Utilization of the plant:                83.3 %
+            Number of days in use:                      6 day
+            Number of products produced:             1800 (in total)
+            Utilization of the plant:               100.0 %
 
 Plant_Y:
             Number of days in use:                      6 day
@@ -51,5 +50,5 @@ Plant_Z:
             Number of products produced:             3000 (in total)
             Utilization of the plant:               100.0 %
 
-Overall of utilization:                              94.4 %
+Overall of utilization:                             100.0 %
 

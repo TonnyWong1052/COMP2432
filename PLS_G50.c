@@ -8,16 +8,27 @@ int pc[2], cp[2];
 int response_message = 1;
 
 void run_command(char input_command[100], char (*start_date)[11], char (*end_date)[11], Node **order_list, struct Plant plants[]) {
-    int child_id = fork();
-    if (child_id == 0) {
+//    int child_id = fork();
+//    if (child_id == 0) {
         if (strncmp(input_command, "test", 4) == 0) {   // for developer testing only
-            strcpy(input_command, "addPERIOD 2024-06-01 2024-06-11");
+            strcpy(input_command, "addPERIOD 2024-08-01 2024-08-31");
             addPERIOD(input_command, start_date, end_date);
-            strcpy(input_command, "addBATCH test_data_G50_FCFS.dat");
+            strcpy(input_command, "addBATCH prof_test_data.dat");
             addBATCH(input_command, order_list);
-            strcpy(input_command, "runPLS FCFS | printREPORT > report_01_FCFS.txt");
-            runPLS(input_command, order_list, start_date, end_date, plants);
-        } else if (strncmp(input_command, "addPERIOD", 9) == 0) {
+//            strcpy(input_command, "addBATCH orderBATCH01.dat");
+//            addBATCH(input_command, order_list);
+            strcpy(input_command, "runPLS FCFS | printREPORT > report_50_FCFS.txt");
+            runPLS(input_command, order_list, (char *) start_date, (char *) end_date, plants);
+            strcpy(input_command, "runPLS PR | printREPORT > report_50_PR.txt");
+            runPLS(input_command, order_list, (char *) start_date, (char *) end_date, plants);
+            strcpy(input_command, "runPLS SJF | printREPORT > report_50_SJF.txt");
+            runPLS(input_command, order_list, (char *) start_date, (char *) end_date, plants);
+            strcpy(input_command, "runPLS MTS | printREPORT > report_50_MTS.txt");
+            runPLS(input_command, order_list, (char *) start_date, (char *) end_date, plants);
+            strcpy(input_command, "runPLS MTS | printREPORT > report_50_MTS.txt");
+            runPLS(input_command, order_list, (char *) start_date, (char *) end_date, plants);
+        } else
+        if (strncmp(input_command, "addPERIOD", 9) == 0) {
             addPERIOD(input_command, start_date, end_date);
         } else if (strncmp(input_command, "addORDER", 8) == 0) {
             addORDER(input_command, order_list);
@@ -37,12 +48,13 @@ void run_command(char input_command[100], char (*start_date)[11], char (*end_dat
             printf("Input command '%s' not found\n", input_command);
         }
         write(cp[1], &response_message, sizeof(response_message));
-    }
-    // if read exit_message is True, exit the system
-    int exit_message;
-    read(cp[0], &exit_message, sizeof(exit_message));
-    if(exit_message == -1)
-        exit(0);
+//    }
+//    // if read exit_message is True, exit the system
+//    int exit_message;
+//    read(cp[0], &exit_message, sizeof(exit_message));
+//    if(exit_message == -1)
+//        exit(0);
+//    wait(NULL);
 }
 
 int main() {
@@ -62,6 +74,6 @@ int main() {
         printf("Please enter:\n> ");
         fgets(input_command, sizeof(input_command), stdin);
         run_command(input_command, &start_date, &end_date, &order_list, plants);
-        wait(NULL);
+
     }
 }

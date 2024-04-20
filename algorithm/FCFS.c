@@ -61,6 +61,8 @@ void FCFS(Node **order_list, struct Plant plants[3], char *start_date, char *end
         }
 
         if (reject_order_count >= plantCount) { // no one plant accept the order, move to reject list
+            removeNewline(order->orderNumber);
+            removeNewline(order->productName);
             addToTail(&reject_order_list, order);
             delete_begin(order_list);
             reject_order_count = 0;

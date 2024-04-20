@@ -63,9 +63,19 @@ void writeOutputFile(char *algo_name, Node *reject_order_list, Node *receive_ord
     fprintf(file, "\n=================================================================================");
     // reject loop here
     while (get_size(reject_order_list) != 0) {
+        fprintf(file, "\n");
         struct Order *temp = (struct Order *) get_first(reject_order_list);
+        removeNewline(temp->orderNumber);
         removeNewline(temp->productName);
-        fprintf(file, "\n%-15s %-15s %-15s %-8d ", temp->orderNumber, temp->productName, temp->dueDate, temp->quantity);
+        removeNewline(temp->dueDate);
+//        fprintf(file, "%-15s ", temp->orderNumber);
+//        fprintf(file, "%-15s ", temp->productName);
+//        fprintf(file, "%-15s ", temp->dueDate);
+//        fprintf(file, "%-8d ", temp->quantity);
+        char result[100];
+        sprintf(result, "%-15s %-15s %-15s %-8d", temp->orderNumber, temp->productName, temp->dueDate, temp->quantity);
+        removeNewline(result);
+        fprintf(file, "%s", result);
         delete_begin(&reject_order_list);
     }
 
@@ -97,6 +107,8 @@ void writeOutputFile(char *algo_name, Node *reject_order_list, Node *receive_ord
             delete_begin(&plants[x].myOrder);
         }
     }
+    free(reject_order_list);
+    free(receive_order_list);
 }
 
 void printPlantSchedule(struct Plant *plant, int period_day, char *start_date, char *end_date) {
@@ -120,6 +132,13 @@ void printPlantSchedule(struct Plant *plant, int period_day, char *start_date, c
         } else
             printf("%-15s| %-15s| %-15s| %-15s| %-15s|\n", date_table, "NA", "", "", "");
         addOneDay(date_table, date_table);
+    }
+
+    for(x=0;x< get_size(plant->orderDate);x++){
+        deleteElementFromIndex(&plant->orderDate,0);
+    }
+    for(x=0;x< get_size(plant->myOrder);x++){
+        deleteElementFromIndex(&plant->orderDate,0);
     }
 }
 

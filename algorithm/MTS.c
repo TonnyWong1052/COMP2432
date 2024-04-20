@@ -22,6 +22,7 @@ int findMaxRemainingDayPlant(int plant_remaining_productiveForces[plantCount][3]
 }
 
 bool checkPlantPriorityValue(int x, int y, int z, int max_remain_day_index, int send_order_to_plant[plantCount]){
+//    printf("x %d, y,%d z %d\n", x,y,z);
     if(max_remain_day_index==0) {
         if (x >= send_order_to_plant[0])
             return true;
@@ -29,7 +30,7 @@ bool checkPlantPriorityValue(int x, int y, int z, int max_remain_day_index, int 
         if (y >= send_order_to_plant[1])
             return true;
     } else if(max_remain_day_index==2) {
-        if (y >= send_order_to_plant[2])
+        if (z >= send_order_to_plant[2])
             return true;
     }
     return false;
@@ -98,10 +99,17 @@ void MTS(Node **order_list, struct Plant plants[3], char *start_date, char *end_
                 for (z = 0; z <= total / 500 && z <= plant_remaining_productiveForces[2][1]; z++) {
                     int l = total - (300 * x + 400 * y + 500 * z);
                     // plant priority: detect which have maximum remaining day
-                    if (l == 0 && checkPlantPriorityValue(x, y, z, findMaxRemainingDayPlant(plant_remaining_productiveForces), process_day_from_plant)) {
-                        process_day_from_plant[0] = x;
-                        process_day_from_plant[1] = y;
-                        process_day_from_plant[2] = z;
+                    if (l == 0) {
+                        if(checkPlantPriorityValue(x, y, z, findMaxRemainingDayPlant(plant_remaining_productiveForces), process_day_from_plant))
+//                        checkPlantPriorityValue(x, y, z, findMaxRemainingDayPlant(plant_remaining_productiveForces), process_day_from_plant)
+//                        printf(findMaxRemainingDayPlant(plant_remaining_productiveForces),);
+                        if(x>=0 && y >= 0 & z >= 0) {
+//                            printf("%d %d %d\n", process_day_from_plant[0], process_day_from_plant[1], process_day_from_plant[2]);
+//                            printf("%d %d %d\n", plant_remaining_productiveForces[0][1], plant_remaining_productiveForces[1][1], plant_remaining_productiveForces[2][1]);
+                            process_day_from_plant[0] = x;
+                            process_day_from_plant[1] = y;
+                            process_day_from_plant[2] = z;
+                        }
                     }
                 }
             }
@@ -113,7 +121,7 @@ void MTS(Node **order_list, struct Plant plants[3], char *start_date, char *end_
             inform_child_message = 2;
             for (x = 0; x < plantCount; x++) {
                 int order_qty = process_day_from_plant[x] * plant_remaining_productiveForces[x][0];
-                if(order_qty!=0) {
+                if(order_qty>0) {
                     order->quantity = order_qty;
                     write((pc[x])[1], &inform_child_message, sizeof(inform_child_message));
                     write((pc[x])[1], order, sizeof(struct Order));
@@ -135,11 +143,11 @@ void MTS(Node **order_list, struct Plant plants[3], char *start_date, char *end_
                     plant_index = x;
             }
             reject_order_count = evaluateAndDistributeOrders(pc, cp, plants, order, order_list, &reject_order_list, &receive_order_list,
-                                        start_date, plant_index, reject_order_count, plantCount, order_index);
+                                                             plant_start_dates[plant_index], plant_index, reject_order_count, plantCount, order_index);
         }
         if (reject_order_count >= plantCount) { // no one plant accept the order, move to reject list
             addToTail(&reject_order_list, order);
-            delete_begin(order_list);
+            deleteElementFromIndex(order_list, order_index);
             reject_order_count = 0;
         }
         round++;

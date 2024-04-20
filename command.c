@@ -107,12 +107,14 @@ void addBATCH(char input_command[100], Node **order_list) {
 
     // addBATCH incorrect_batch.dat
     char line[100];
+    int lineCount = 1;
     while (fgets(line, sizeof(line), file) != NULL) {
         removeNewline(line);
         char temp[100];
         strcpy(temp, line);
         if(!addORDER(line, order_list))
-            printf("Error 203 : batch File inside command format is not correct: '%s'\n", temp);
+            printf("Error 203 : batch File inside command format is not correct: Line %d\n", lineCount);
+        lineCount++;
     }
     fclose(file);
 }
@@ -160,6 +162,13 @@ void runPLS(char input_command[100], Node **order_list, char start_date[11], cha
         return;
     }
 
+    Node *temp_order_list = NULL;
+    int x;
+    for(x=0;x<get_size(*order_list); x++){
+        struct Order *order = getElementFromIndex(*order_list, x);
+        addToTail(&temp_order_list, order);
+    }
+
     if (strcmp(algorithm, "FCFS") == 0) // if user input 'FCFS' algorithm
         FCFS(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "PR") == 0)
@@ -168,9 +177,14 @@ void runPLS(char input_command[100], Node **order_list, char start_date[11], cha
         SJF(order_list, plants, start_date, end_date, outputReport);
     else if (strcmp(algorithm, "MTS") == 0)
         MTS(order_list, plants, start_date, end_date, outputReport);
-    else
+    else{
         printf("Error 404: Input '%s' algorithm not existing\n", algorithm);
-//    order_list = malloc(sizeof(struct Order));
+        return;
+    }
+    for(x=0;x< get_size(temp_order_list);x++){
+        struct Order *order = getElementFromIndex(temp_order_list, x);
+        addToTail(order_list, order);
+    }
 }
 
 void printDATA(char start_date[11], char end_date[11], Node *order_list) {
