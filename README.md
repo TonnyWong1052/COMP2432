@@ -4,11 +4,6 @@
 
 The Steel-making Production Line Scheduler (PLS) aims to assist a medium-sized steel-making manufacturer in optimizing three production plants
 
-## Group Member
-- Chiu Tsz Ching 22088546D
-- Luo Yuehan 20069609D
-- Leung Chu Shing 23030897D
-
 ## Project Scope
 
 - Process Management
