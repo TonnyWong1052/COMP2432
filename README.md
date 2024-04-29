@@ -113,11 +113,11 @@ mkdir algorithm
 
 2. SCP to move file to apollo
 ```bash
-scp /Your_file_path/COMP2432_project/object/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/23030897d/COMP2432_project/object/
+scp /Your_file_path/COMP2432_project/object/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/stud_Id/COMP2432_project/object/
 
-scp /Your_file_path/COMP2432_project/algorithm/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/23030897d/COMP2432_project/algorithm/
+scp /Your_file_path/COMP2432_project/algorithm/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/stud_Id/COMP2432_project/algorithm/
 
-scp /Your_file_path/COMP2432_project/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/23030897d/COMP2432_project/
+scp /Your_file_path/COMP2432_project/* You_PolyU_ID_here@csdoor.comp.polyu.edu.hk:/home/stud_Id/COMP2432_project/
 ```
 
 ### Compile the Program
